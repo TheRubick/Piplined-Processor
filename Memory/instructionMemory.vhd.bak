@@ -5,6 +5,7 @@ USE IEEE.numeric_std.all;
 ENTITY instructionMemory IS
 	PORT(
 		clk : IN std_logic;
+		rd : IN std_logic;
 		we  : IN std_logic;
 		PCaddress : IN  std_logic_vector(31 DOWNTO 0);
 		datain : IN std_logic_vector(15 DOWNTO 0 );
@@ -13,7 +14,7 @@ END ENTITY instructionMemory;
 
 ARCHITECTURE instructionMemoryArch OF instructionMemory IS
 
-	TYPE ram_type IS ARRAY(0 TO 2047) OF std_logic_vector(15 DOWNTO 0);
+	TYPE ram_type IS ARRAY(0 TO 4095) OF std_logic_vector(15 DOWNTO 0);
 	SIGNAL ram : ram_type ;
 	
 	BEGIN
@@ -27,6 +28,7 @@ ARCHITECTURE instructionMemoryArch OF instructionMemory IS
 				END IF;
 		END PROCESS;
 		--THE RAM WOULD RETRIVE NOTHING IN CASE OF ADDRESS = "ZZZZZZ"
-		instruction <= ram(to_integer(unsigned(PCaddress)));
+		instruction <= ram(to_integer(unsigned(PCaddress))) when rd = 1
+		else instruction;
 END instructionMemoryArch;
 

@@ -1,0 +1,125 @@
+Tue May 05 4:36:09 PM Egypt Standard Time 2020
+Trace back: can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"
+    while executing
+"view $type"
+    (procedure "toggleview" line 14)
+    invoked from within
+"toggleview memory"
+    (menu invoke)
+  <2: ::tkerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+  <1: ::bgerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+Tue May 05 4:38:52 PM Egypt Standard Time 2020
+Trace back: can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"
+    while executing
+"view $type"
+    (procedure "toggleview" line 14)
+    invoked from within
+"toggleview memory"
+    (menu invoke)
+  <2: ::tkerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+  <1: ::bgerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+Tue May 05 4:49:42 PM Egypt Standard Time 2020
+Trace back: can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"
+    while executing
+"view $type"
+    (procedure "toggleview" line 14)
+    invoked from within
+"toggleview memory"
+    (menu invoke)
+  <2: ::tkerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+  <1: ::bgerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+Tue May 05 4:54:51 PM Egypt Standard Time 2020
+Trace back: can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"
+    while executing
+"view $type"
+    (procedure "toggleview" line 14)
+    invoked from within
+"toggleview memory"
+    (menu invoke)
+  <2: ::tkerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+  <1: ::bgerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+Tue May 05 5:01:56 PM Egypt Standard Time 2020
+Trace back: can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"
+    while executing
+"view $type"
+    (procedure "toggleview" line 14)
+    invoked from within
+"toggleview memory"
+    (menu invoke)
+  <2: ::tkerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
+  <1: ::bgerror {can't use empty string as operand of "-"
+    while executing
+"::.windowmgr ShowWindowType memory"
+    ("eval" body line 1)
+    invoked from within
+"eval $vsimPriv(windowmgr) ShowWindowType $window_type"}
