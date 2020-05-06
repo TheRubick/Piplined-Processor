@@ -10,7 +10,8 @@ entity Fetch is
     Jmp_PC, Mem_data, PC_ID_EX: in std_logic_vector (31 downto 0);
     RTI_Buff, RET_Buff, CALL_Buff,RET_module_out, RTI_module_out, CALL_module_out, INT_module_out, reset_module_out: out std_logic;
     IR_Buff: out std_logic_vector (15 downto 0);
-    PPC: out std_logic_vector (31 downto 0)    
+    PPC: out std_logic_vector (31 downto 0);
+    jump_reg_add: out std_logic_vector (2 downto 0)
   ) ;
 end Fetch;
 
@@ -92,6 +93,7 @@ architecture Fetch_arch of Fetch is
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
 
 begin
+    jump_reg_add <= "000";
     --temp signasl of interrupt
     reset <= reset_sg;
     reset1 <= '0';
