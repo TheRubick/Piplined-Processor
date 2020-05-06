@@ -75,11 +75,14 @@ end component;
 component Memory_stage_entity IS
 	PORT(
 		clk,reset,
-		reg1_wr_ex,reg2_wr_ex,dst1_add_ex,dst2_add_ex,mem_rd_ex,mem_wr_ex,out_ex,in_ex,
+		reg1_wr_ex,reg2_wr_ex : IN std_logic;
+		dst1_add_ex,dst2_add_ex : IN std_logic_vector(2 downto 0);
+		mem_rd_ex,mem_wr_ex,out_ex,in_ex,
 		call_ex,inc_ex,dec_ex,ret_ex,rti_ex,int_ex,
 		ALU,dp1,dp2: IN  std_logic;
 		address_dst1_ex,data_dst2_ex,dst1_mem,dst2_mem,pc_ex_mem,input_port  : IN  std_logic_vector(31 DOWNTO 0);
-		reg1_wr_ex_output,reg2_wr_ex_output,dst1_add_ex_output,dst2_add_ex_output: OUT std_logic;
+		reg1_wr_ex_output,reg2_wr_ex_output : OUT std_logic;
+		dst1_add_ex_output,dst2_add_ex_output : OUT std_logic_vector(2 downto 0);
 		dst1_mem_output,dst2_mem_output,out_port_output : OUT std_logic_vector(31 DOWNTO 0)
 		);
 END Component;
@@ -87,9 +90,11 @@ END Component;
 --WriteBack Stage Component
 component Mem_WB_entity IS
 	PORT(
-		reg1_wr_mem,reg2_wr_mem,dst1_add_mem,dst2_add_mem,clk,reset : IN  std_logic;
+		reg1_wr_mem,reg2_wr_mem,clk,reset : IN  std_logic;
+		dst1_add_mem,dst2_add_mem : IN std_logic_vector(2 downto 0);
 		dst1_mem_input,dst2_mem_input : IN  std_logic_vector(31 DOWNTO 0);
-		reg1_wr_mem_output,reg2_wr_mem_output,dst1_add_mem_output,dst2_add_mem_output : OUT  std_logic;
+		reg1_wr_mem_output,reg2_wr_mem_output : OUT std_logic;
+		dst1_add_mem_output,dst2_add_mem_output : OUT std_logic_vector(2 downto 0);
 		dst1_mem_output,dst2_mem_output : OUT std_logic_vector(31 DOWNTO 0)
 		);
 END component;
@@ -107,11 +112,13 @@ signal dst1_add_EX_OUT, dst2_add_EX_OUT : std_logic_vector(2 downto 0);
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
 -- signals outed from Memory Stage to Memory/WriteBack Stage , output port is not related to the writeback stage
-signal reg1_mem_out,reg2_mem_out,dst1_add_mem_out,dst2_add_mem_out: std_logic;
+signal reg1_mem_out,reg2_mem_out: std_logic;
+signal dst1_add_mem_out,dst2_add_mem_out: std_logic_vector(2 downto 0);
 signal dst1_mem_out,dst2_mem_out,out_port_out : std_logic_vector(31 DOWNTO 0);
 
 -- signals outed from WriteBack Stage to fetch
-signal reg1_wb_out,reg2_wb_out,dst1_add_wb_out,dst2_add_wb_out: std_logic;
+signal reg1_wb_out,reg2_wb_out: std_logic;
+signal dst1_add_wb_out,dst2_add_wb_out: std_logic_vector(2 downto 0);
 signal dst1_wb_out,dst2_wb_out : std_logic_vector(31 DOWNTO 0);
 ------------------------------------------------------------------------
 SIGNAL Notfound : std_logic_vector(31 downto 0):= (others => '0');
@@ -123,7 +130,7 @@ begin
 execute_component : EX_STAGE port map(CLK, RST, IR_out, INT_out, JZ_out, '0', '0', '0', '0', '0', '0', '0', '0', OUT1_out, OUT2_out, Notfound, Notfound, Notfound, Notfound, PC_IF_EX_out, Notfound, ALU_ENABLE_out, IMM_out, EA_out, Predication,  Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX);
 
 -- Execute Memory Buffer
-EX_MEM_Buffer_component : EX_MEM_Buffer port map (CLK, RST, '0', PC_EX, ADD_DST1_EX, DATA_DST2_EX, PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT, REG1_WR_out, REG2_WR_out, reg1_wr_EX_OUT, reg2_wr_EX_OUT, MEM_WR_OUT, MEM_RD_OUT, CALL_out, RET_out, RTI_out, OUT_SIGNAL_out,'0',INT_out,'0','0',DP1_EX, DP2_EX, CALL_EX_OUT, RET_EX_OUT, RTI_EX_OUT, OUT_OUT, IN_OUT, INT_EX_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT,DST1_ADD_out,DST2_ADD_out,dst1_add_EX_OUT,dst2_add_EX_OUT);
+EX_MEM_Buffer_component : EX_MEM_Buffer port map (CLK, RST, '0', PC_EX, ADD_DST1_EX, DATA_DST2_EX, PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT, REG1_WR_out, REG2_WR_out,MEMORY_WRITE_out,MEMEORY_READ_out , reg1_wr_EX_OUT, reg2_wr_EX_OUT, MEM_WR_OUT, MEM_RD_OUT, CALL_out, RET_out, RTI_out, OUT_SIGNAL_out,'0',INT_out,'0','0',DP1_EX, DP2_EX, CALL_EX_OUT, RET_EX_OUT, RTI_EX_OUT, OUT_OUT, IN_OUT, INT_EX_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT,DST1_ADD_out,DST2_ADD_out,dst1_add_EX_OUT,dst2_add_EX_OUT);
 
 -- notes  - all dp loadcase is missing and inc , dec , in signals and Dst1_EX, Dst1_MEM, Dst2_EX, Dst2_MEM,  JMP_INT_PC are also missing
 
@@ -135,7 +142,7 @@ Memory_stage_component : Memory_stage_entity port map(CLK, RST, reg1_wr_EX_OUT, 
 					dst1_mem_out,dst2_mem_out,out_port_out);
 
 --WriteBack Stage 
-WriteBack_stage_component : Mem_WB_entity port map(reg1_mem_out,reg2_mem_out,dst1_add_mem_out,dst2_add_mem_out,CLK,RST,
+WriteBack_stage_component : Mem_WB_entity port map(reg1_mem_out,reg2_mem_out,CLK,RST,dst1_add_mem_out,dst2_add_mem_out,
 					dst1_mem_out,dst2_mem_out,
 					reg1_wb_out,reg2_wb_out,dst1_add_wb_out,dst2_add_wb_out, -- output signals
 					dst1_wb_out,dst2_wb_out
