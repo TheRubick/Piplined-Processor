@@ -5,11 +5,12 @@ use IEEE.std_logic_unsigned.all;
 
 ENTITY Memory_stage_entity IS
 	PORT(
+		clk,reset,
 		reg1_wr_ex,reg2_wr_ex,dst1_add_ex,dst2_add_ex,mem_rd_ex,mem_wr_ex,out_ex,in_ex,
-		call_ex,inc_ex,dec_ex,ret_ex,rti_ex,int_ex,reset,clk,
+		call_ex,inc_ex,dec_ex,ret_ex,rti_ex,int_ex,
 		ALU,dp1,dp2: IN  std_logic;
-		reg1_wr_ex_output,reg2_wr_ex_output,dst1_add_ex_output,dst2_add_ex_output: OUT std_logic;
 		address_dst1_ex,data_dst2_ex,dst1_mem,dst2_mem,pc_ex_mem,input_port  : IN  std_logic_vector(31 DOWNTO 0);
+		reg1_wr_ex_output,reg2_wr_ex_output,dst1_add_ex_output,dst2_add_ex_output: OUT std_logic;
 		dst1_mem_output,dst2_mem_output,out_port_output : OUT std_logic_vector(31 DOWNTO 0)
 		);
 END ENTITY Memory_stage_entity;

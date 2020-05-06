@@ -130,8 +130,8 @@ ADD_DST1_EX_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (ALU_OR_
 
 --- DP1_EX and DP2_EX
 DP_Sel <= LOADCASE AND (NOT(ALU_Enable));
-DP1_EX_Mux : mux2_1bit generic map (INPUT_WIDTH => 1) port map ('0', DP1, DP_Sel, DP1_EX);
-DP2_EX_Mux : mux2_1bit generic map (INPUT_WIDTH => 1) port map ('0', DP2, DP_Sel, DP2_EX);
+DP1_EX_Mux : mux2_1bit port map ('0', DP1, DP_Sel, DP1_EX);
+DP2_EX_Mux : mux2_1bit port map ('0', DP2, DP_Sel, DP2_EX);
 
 --INT Mux
 INT_Sel <= INT AND JMPZ AND PR_Done AND (NOT(Flush));

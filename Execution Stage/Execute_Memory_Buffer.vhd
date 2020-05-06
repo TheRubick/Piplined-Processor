@@ -7,10 +7,12 @@ CLK, RST, Stall: in std_logic;
 --IR_Buff: in std_logic_vector (15 downto 0);
 PC_IN, ADD_DST1_IN, DATA_DST2_IN : IN std_logic_vector(31 downto 0);
 PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT : OUT std_logic_vector(31 downto 0);
-reg1_wr_IN, reg2_wr_IN, dst1_add_IN, dst2_add_IN , MEM_WR, MEM_RD  : IN  std_logic;
-reg1_wr_OUT, reg2_wr_OUT, dst1_add_OUT, dst2_add_OUT, MEM_WR_OUT, MEM_RD_OUT  : OUT  std_logic;
+reg1_wr_IN, reg2_wr_IN, MEM_WR, MEM_RD  : IN  std_logic;
+reg1_wr_OUT, reg2_wr_OUT, MEM_WR_OUT, MEM_RD_OUT  : OUT  std_logic;
 CALL_IN, RET_IN, RTI_IN, OUT_IN, IN_IN, INT_IN ,INC_IN, DEC_IN, DP1_IN, DP2_IN :  IN std_logic;
-CALL_OUT, RET_OUT, RTI_OUT, OUT_OUT, IN_OUT, INT_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT :  OUT std_logic
+CALL_OUT, RET_OUT, RTI_OUT, OUT_OUT, IN_OUT, INT_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT :  OUT std_logic;
+dst1_add_IN, dst2_add_IN : IN std_logic_vector(2 downto 0);
+dst1_add_OUT, dst2_add_OUT : OUT std_logic_vector(2 downto 0) 
 
 ) ;
 end EX_MEM_Buffer;
@@ -52,8 +54,8 @@ PC : generic_WAR_reg generic map (REG_WIDTH => 32) port map (PC_IN, CLK, reset, 
 reg1_Wr_Latch : WAR_latch port map(reg1_wr_IN, CLK, reset,'1', reg1_wr_OUT);
 reg2_Wr_Latch : WAR_latch port map(reg2_wr_IN, CLK, reset,'1', reg2_wr_OUT);
 
-dst1_Add_Latch : WAR_latch port map(dst1_add_IN, CLK, reset,'1', dst1_add_OUT);
-dst2_Add_Latch : WAR_latch port map(dst2_add_IN, CLK, reset,'1', dst2_add_OUT);
+dst1_Add_Latch : generic_WAR_reg generic map (REG_WIDTH => 3) port map(dst1_add_IN, CLK, reset,'1', dst1_add_OUT);
+dst2_Add_Latch : generic_WAR_reg generic map (REG_WIDTH => 3) port map(dst2_add_IN, CLK, reset,'1', dst2_add_OUT);
 
 MEM_RD_Latch : WAR_latch port map(MEM_RD, CLK, reset,'1', MEM_RD_OUT);
 MEM_WR_Latch  : WAR_latch port map(MEM_WR, CLK, reset,'1', MEM_WR_OUT);
