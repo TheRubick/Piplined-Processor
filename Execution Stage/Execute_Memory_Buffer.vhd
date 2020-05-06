@@ -12,8 +12,9 @@ reg1_wr_OUT, reg2_wr_OUT, MEM_WR_OUT, MEM_RD_OUT  : OUT  std_logic;
 CALL_IN, RET_IN, RTI_IN, OUT_IN, IN_IN, INT_IN ,INC_IN, DEC_IN, DP1_IN, DP2_IN :  IN std_logic;
 CALL_OUT, RET_OUT, RTI_OUT, OUT_OUT, IN_OUT, INT_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT :  OUT std_logic;
 dst1_add_IN, dst2_add_IN : IN std_logic_vector(2 downto 0);
-dst1_add_OUT, dst2_add_OUT : OUT std_logic_vector(2 downto 0) 
-
+dst1_add_OUT, dst2_add_OUT : OUT std_logic_vector(2 downto 0) ;
+ALU_Enable_EX_IN : IN std_logic;
+ALU_Enable_EX_OUT : OUT std_logic
 ) ;
 end EX_MEM_Buffer;
 

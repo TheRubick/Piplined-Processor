@@ -9,7 +9,7 @@ PORT(
  CLK , Write_enable     :  IN std_logic;
  Address_Read : IN  std_logic_vector(31 DOWNTO 0);
  data_write  : IN  std_logic_vector(31 DOWNTO 0);
- data_read : OUT std_logic_vector(31 DOWNTO 0)
+ data_read : OUT std_logic_vector(31 DOWNTO 0));
 );
 END TEST ;
 

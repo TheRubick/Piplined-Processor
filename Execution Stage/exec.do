@@ -19,7 +19,6 @@ add wave -position end  sim:/ex_stage/IMM
 add wave -position end  sim:/ex_stage/flagin
 add wave -position end  sim:/ex_stage/flagout
 add wave -position end  sim:/ex_stage/ALUOUT
-add wave -position end  sim:/ex_stage/ALUOUT
 add wave -position end  sim:/ex_stage/ADD_DST1_EX
 add wave -position end  sim:/ex_stage/DATA_DST2_EX
 add wave -position end  sim:/ex_stage/DP1_EX
