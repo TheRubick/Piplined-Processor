@@ -108,7 +108,7 @@ BEGIN
 		
 	--Current data part
 		currentDataSel <= (call_ex or int_ex) & SF; --selector of this part
-		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataInputCurrentData,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
+		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
 		
 	
 	
