@@ -5,10 +5,10 @@ use IEEE.std_logic_unsigned.all;
 
 ENTITY Memory_stage_entity IS
 	PORT(
-		we  : IN std_logic;
 		reg1_wr_ex,reg2_wr_ex,dst1_add_ex,dst2_add_ex,mem_rd_ex,mem_wr_ex,out_ex,in_ex,
 		call_ex,inc_ex,dec_ex,ret_ex,rti_ex,int_ex,reset,clk,
 		ALU,dp1,dp2: IN  std_logic;
+		reg1_wr_ex_output,reg2_wr_ex_output,dst1_add_ex_output,dst2_add_ex_output: OUT std_logic;
 		address_dst1_ex,data_dst2_ex,dst1_mem,dst2_mem,pc_ex_mem,input_port  : IN  std_logic_vector(31 DOWNTO 0);
 		dst1_mem_output,dst2_mem_output,out_port_output : OUT std_logic_vector(31 DOWNTO 0)
 		);
@@ -79,16 +79,6 @@ component dataMemory IS
 END component;
 
 
---MemWB buffers
-component Mem_WB_entity IS
-	PORT(
-		reg1_wr_mem,reg2_wr_mem,dst1_add_mem,dst2_add_mem,clk,reset : IN  std_logic;
-		reg1_wr_mem_output,reg2_wr_mem_output,dst1_add_mem_output,dst2_add_mem_output : OUT  std_logic;
-		dst1_mem_input,dst2_mem_input : IN  std_logic_vector(31 DOWNTO 0);
-		dst1_mem_output,dst2_mem_output : OUT std_logic_vector(31 DOWNTO 0)
-		);
-END component;
-
 signal RF,SF,FlagRegEnable,WR_sig,RD_sig,
 		incSpWire,decSpWire : std_logic;
 signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
@@ -120,7 +110,7 @@ BEGIN
 	
 	--Data Memory Part
 		dp1Mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(address_dst1_ex,dst1_mem,dp1,dp1MuxOutput);
-		dp2Mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,dst2_mem,dp2,dst2_mem_output);
+		dp2Mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,dst2_mem,dp2,dst2_mem_wire);
 		
 		--Read and Write signals
 		RD_sig <= RF or mem_rd_ex;
@@ -129,8 +119,7 @@ BEGIN
 		dataMemComponent : dataMemory port map(clk,WR_sig,current_address,current_data,datamem1);
 		
 		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(datamem1,dp1MuxOutput,RD_sig,dataMem2);
-		inputPortMuxDataMem2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataMem2,input_port,in_ex,dst2_mem_wire);
-		dst2_mem_output <= dst2_mem_wire;
+		inputPortMuxDataMem2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataMem2,input_port,in_ex,dst1_mem_output);
 		
 	--output port part
 		OutPortLatch : generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(dst2_mem_wire,clk,reset,'1',out_port_output); -- here we used wire because we need the dst2_mem output to be "input" in the out port
@@ -155,8 +144,13 @@ BEGIN
 		--dp1MuxStackPointerOutput Mux spInput
 		dp1MuxSPOutputMuxspInput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxStackPointerOutput,spInputData,incSpWire,current_address);
 		
-	--buffers stage part
-		--Mem_WB_Buffers : Mem_WB_entity port map (reg1_wr_ex,reg2_wr_ex,dst1_add_ex,dst2_add_ex,clk,reset,)
+	--Output wires of this stage
+		reg1_wr_ex_output <= reg1_wr_ex;
+		reg2_wr_ex_output <= reg2_wr_ex;
+		dst1_add_ex_output <= dst1_add_ex;
+		dst2_add_ex_output <= dst2_add_ex;
+		--dst1_mem_output is assigned above
+		dst2_mem_output <= dst2_mem_wire;
 END Memory_stage_arch;
 
 
