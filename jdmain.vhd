@@ -57,14 +57,14 @@ architecture jdmain_arch of jdmain is
           dst2_data: in std_logic_vector (31 downto 0);
           dst1_write_enable: in std_logic;
           dst2_write_enable: in std_logic;
-          
-      
+
+
           call_out:out std_logic;
           RET_out:out std_logic;
           PC_IF_EX_out:out std_logic_vector (31 downto 0);
           INT_out:out std_logic;
           RTI_out:out std_logic;
-      
+
           reg_write1:out std_logic;
           reg_write2:out std_logic;
           memory_read:out std_logic;
@@ -72,6 +72,7 @@ architecture jdmain_arch of jdmain is
           alu_src2:out std_logic;
           alu_enable:out std_logic;
           out_signal:out std_logic;
+          in_signal:out std_logic;
           jz:out std_logic;
           jmp:out std_logic;
           two_instruction_input: out std_logic;
@@ -79,16 +80,18 @@ architecture jdmain_arch of jdmain is
           IR_out:out std_logic_vector (15 downto 0);
           EA:out std_logic_vector (31 downto 0);
           IMM:out std_logic_vector (31 downto 0);
+          decreament_sp: out std_logic;
+          increament_sp: out std_logic;
           TEMP_OUT:out std_logic_vector(3 downto 0);
           jump_reg_data: out std_logic_vector (31 downto 0);
           out1_data: out std_logic_vector (31 downto 0);
           out2_data: out std_logic_vector (31 downto 0);
           dst1_add_out:out std_logic_vector(2 downto 0);
           dst2_add_out:out std_logic_vector(2 downto 0)
-      
+
         );
       end component;
-      
+
       component decode_execute_buffer is
         port (
           CLK: in std_logic;
@@ -108,7 +111,10 @@ architecture jdmain_arch of jdmain is
           OUT2: in std_logic_vector (31 downto 0);
           EA: in std_logic_vector (31 downto 0);
           IMM: in std_logic_vector (31 downto 0);
+          decreament_sp: in std_logic;
+          increament_sp: in std_logic;
           OUT_SIGNAL: in std_logic;
+          IN_SIGNAL: in std_logic;
           MEMEORY_READ: in std_logic;
           MEMORY_WRITE: in std_logic;
           ALU_SRC2: in std_logic;
@@ -116,7 +122,7 @@ architecture jdmain_arch of jdmain is
           JZ: in std_logic;
           JMP: in std_logic;
           STALL: in std_logic;
-        
+
           IR_out: out std_logic_vector (15 downto 0);
           RET_out: out std_logic;
           CALL_out: out std_logic;
@@ -132,7 +138,10 @@ architecture jdmain_arch of jdmain is
           OUT2_out: out std_logic_vector (31 downto 0);
           EA_out: out std_logic_vector (31 downto 0);
           IMM_out: out std_logic_vector (31 downto 0);
+          decreament_sp_out: out std_logic;
+          increament_sp_out: out std_logic;
           OUT_SIGNAL_out: out std_logic;
+          IN_SIGNAL_out: out std_logic;
           MEMEORY_READ_out: out std_logic;
           MEMORY_WRITE_out: out std_logic;
           ALU_SRC2_out: out std_logic;
@@ -141,8 +150,8 @@ architecture jdmain_arch of jdmain is
           JMP_out: out std_logic;
           STALL_out: out std_logic
         );
-        end component; 
-      
+        end component;
+
 
     -- fetch missing signals
     signal stall_inFetch,RET_Ex_MEM_inFetch, RTI_Ex_MEM_inFetch: std_logic;
@@ -161,10 +170,10 @@ architecture jdmain_arch of jdmain is
     signal IR_IF_ID: std_logic_vector (15 downto 0);
 
 
-    -- missing input signals to decode 
+    -- missing input signals to decode
     signal dst1_data,dst2_data:  std_logic_vector (31 downto 0);
     signal dst1_write_enable,dst2_write_enable:  std_logic;
-    
+
     --decode out signals
     signal call_Dout: std_logic;
     signal RET_Dout: std_logic;
@@ -179,6 +188,7 @@ architecture jdmain_arch of jdmain is
     signal alu_src2_Dout: std_logic;
     signal alu_enable_Dout: std_logic;
     signal out_signal_Dout: std_logic;
+    signal in_signal_Dout: std_logic;
     signal jz_Dout: std_logic;
     signal jmp_Dout: std_logic;
     signal two_instruction_input_Dout:  std_logic;
@@ -186,6 +196,8 @@ architecture jdmain_arch of jdmain is
     signal IR_out_Dout: std_logic_vector (15 downto 0);
     signal EA_Dout: std_logic_vector (31 downto 0);
     signal IMM_Dout: std_logic_vector (31 downto 0);
+    signal decreament_sp_Dout: std_logic;
+    signal increament_sp_Dout: std_logic;
     signal TEMP_OUT_Dout: std_logic_vector(3 downto 0);
     signal jump_reg_data_Dout:  std_logic_vector (31 downto 0);
     signal out1_data_Dout:  std_logic_vector (31 downto 0);
@@ -211,7 +223,10 @@ architecture jdmain_arch of jdmain is
     signal OUT2_out_ID_EX:  std_logic_vector (31 downto 0);
     signal EA_out_ID_EX:  std_logic_vector (31 downto 0);
     signal IMM_out_ID_EX:  std_logic_vector (31 downto 0);
+    signal decreament_sp_ID_EX: std_logic;
+    signal increament_sp_ID_EX: std_logic;
     signal OUT_SIGNAL_out_ID_EX:  std_logic;
+    signal IN_SIGNAL_out_ID_EX:  std_logic;
     signal MEMEORY_READ_out_ID_EX:  std_logic;
     signal MEMORY_WRITE_out_ID_EX:  std_logic;
     signal ALU_SRC2_out_ID_EX:  std_logic;
@@ -226,8 +241,8 @@ begin
     fetchStage: Fetch port map(clk,reset_sg,interrupt_sg,STALL_Dout,RET_Ex_MEM_inFetch, RTI_Ex_MEM_inFetch,
     CALL_Ex_Mem_inFetch,Predict_inFetch,flush_inFetch, Prediction_Done_inFetch,
     Jmp_PC_inFetch,Mem_data_inFetch,PC_IF_EX_out_ID_EX,
-    RTI_Buff_fromFetch, RET_Buff_fromFetch, 
-    CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch, 
+    RTI_Buff_fromFetch, RET_Buff_fromFetch,
+    CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch,
     INT_module_out_fromFetch,reset_module_out_fromFetch,IR_Buff_fromFetch,PPC_fromFetch,jump_reg_add_fromFetch);
 
     --FETCH buffer
@@ -236,13 +251,13 @@ begin
         reset_module_out_fromFetch,two_instruction_input_Dout
         ,IR_Buff_fromFetch,PPC_fromFetch,
         two_ints, CALL, RET, RTI, INT,PC_IF_ID,IR_IF_ID);
-    
+
     --DECODE
 
     Decode: decode_stage port map(clk,reset_module_out_fromFetch,flush_inFetch,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
         jump_reg_add_fromFetch,dst1_data,dst2_data,dst1_write_enable,dst2_write_enable,call_Dout,RET_Dout,PC_IF_EX_Dout,
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
-        jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,
+        in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
         out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout
     );
@@ -250,7 +265,7 @@ begin
     TEMP_OUT_SG <= IR_out_Dout(13 downto 9);
     ID_EX_buffer: decode_execute_buffer port map(clk,reset_module_out_fromFetch,IR_out_Dout,RET_Dout,call_Dout,PC_IF_ID,
                 INT,RTI_Dout,TEMP_OUT_SG,reg_write1_Dout,reg_write2_Dout,dst1_add_out_Dout,dst2_add_out_Dout,
-                out1_data_Dout,out2_data_Dout,EA_Dout,IMM_Dout,out_signal_Dout,memory_read_Dout,memory_write_Dout,
+                out1_data_Dout,out2_data_Dout,EA_Dout,IMM_Dout, decreament_sp_Dout, increament_sp_Dout,out_signal_Dout, in_signal_Dout,memory_read_Dout,memory_write_Dout,
                 alu_src2_Dout,alu_enable_Dout,jz_Dout,jmp_Dout,STALL_Dout,IR_out_ID_EX,
                 RET_out_ID_EX,
                  CALL_out_ID_EX,
@@ -266,7 +281,10 @@ begin
                  OUT2_out_ID_EX,
                  EA_out_ID_EX,
                  IMM_out_ID_EX,
+                 decreament_sp_ID_EX,
+                 increament_sp_ID_EX,
                  OUT_SIGNAL_out_ID_EX  ,
+                 IN_SIGNAL_out_ID_EX,
                  MEMEORY_READ_out_ID_EX ,
                  MEMORY_WRITE_out_ID_EX,
                  ALU_SRC2_out_ID_EX,

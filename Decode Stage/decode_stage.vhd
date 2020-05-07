@@ -18,7 +18,7 @@ entity decode_stage is
     dst2_data: in std_logic_vector (31 downto 0);
     dst1_write_enable: in std_logic;
     dst2_write_enable: in std_logic;
-    
+
 
     call_out:out std_logic;
     RET_out:out std_logic;
@@ -33,6 +33,7 @@ entity decode_stage is
     alu_src2:out std_logic;
     alu_enable:out std_logic;
     out_signal:out std_logic;
+    in_signal:out std_logic;
     jz:out std_logic;
     jmp:out std_logic;
     two_instruction_input: out std_logic;
@@ -40,6 +41,8 @@ entity decode_stage is
     IR_out:out std_logic_vector (15 downto 0);
     EA:out std_logic_vector (31 downto 0);
     IMM:out std_logic_vector (31 downto 0);
+    decreament_sp: out std_logic;
+    increament_sp: out std_logic;
     TEMP_OUT:out std_logic_vector(3 downto 0);
     jump_reg_data: out std_logic_vector (31 downto 0);
     out1_data: out std_logic_vector (31 downto 0);
@@ -51,7 +54,7 @@ entity decode_stage is
 end decode_stage;
 
 architecture  decode_stage_arch of decode_stage is
-    
+
     component reg_file is
       port(
         src1_add: in std_logic_vector (2 downto 0);
@@ -87,6 +90,7 @@ architecture  decode_stage_arch of decode_stage is
         memory_write: out std_logic;
         alu_src2: out std_logic;
         out_signal: out std_logic;
+        in_signal: out std_logic;
         alu_enable: out std_logic;
         jz: out std_logic;
         jmp: out std_logic;
@@ -94,10 +98,12 @@ architecture  decode_stage_arch of decode_stage is
         two_instruction_input: out std_logic;
         IR_out:out std_logic_vector (15 downto 0);
         EA: out std_logic_vector (31 downto 0);
-        IMM: out std_logic_vector (31 downto 0)
+        IMM: out std_logic_vector (31 downto 0);
+        decreament_sp: out std_logic;
+        increament_sp: out std_logic
       );
       end component;
-        
+
     component mux2_generic is
     GENERIC(
        INPUT_WIDTH : INTEGER := 1);
@@ -117,11 +123,11 @@ architecture  decode_stage_arch of decode_stage is
     signal IR_2_0: std_logic_vector (2 downto 0);
     signal mux2_out: std_logic_vector (2 downto 0);
     signal memory: std_logic;
-    
+
 
     BEGIN
 
-    
+
     IR_8_6 <= IR(8 downto 6);
     IR_2_0 <= IR(2 downto 0);
     dst1_add <= IR_2_0;
@@ -139,13 +145,14 @@ architecture  decode_stage_arch of decode_stage is
 
 
 
-    
+
     mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 3) PORT MAP(IR_2_0, IR_8_6, memory, mux2_out);
     reg_file1:reg_file PORT MAP (mux2_out, src2_add, dst1_add, dst2_add, jump_reg_add, dst1_data, dst2_data, dst1_write_enable,
                                   dst2_write_enable, out1_data, out2_data, jump_reg_data, clk, reset);
 
     control_unit1:control_unit PORT MAP (clk, reset, flush, IR, CALL, RTI, INT, TWO_INST, reg_write1, reg_write2, memory_read, memory_write,
-                                          alu_src2, out_signal, alu_enable, jz, jmp,memory, two_instruction_input, IR_out,EA, IMM);
+                                          alu_src2, out_signal, in_signal, alu_enable, jz, jmp,memory, two_instruction_input, IR_out,EA, IMM,
+                                          decreament_sp, increament_sp);
 
 
 end decode_stage_arch;

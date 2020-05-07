@@ -17,6 +17,7 @@ port(
   memory_write: out std_logic;
   alu_src2: out std_logic;
   out_signal: out std_logic;
+  in_signal: out std_logic;
   alu_enable: out std_logic;
   jz: out std_logic;
   jmp: out std_logic;
@@ -24,7 +25,9 @@ port(
   two_instruction_input: out std_logic;
   IR_out:out std_logic_vector (15 downto 0);
   EA: out std_logic_vector (31 downto 0);
-  IMM: out std_logic_vector (31 downto 0)
+  IMM: out std_logic_vector (31 downto 0);
+  decreament_sp: out std_logic;
+  increament_sp: out std_logic
 );
 end control_unit;
 
@@ -44,8 +47,8 @@ architecture control_unit_arch of control_unit is
     signal X: std_logic:= '0';
     signal nop: std_logic_vector (15 downto 0);
     signal IR_temp_out: std_logic_vector (15 downto 0);
-    signal decreament_sp: std_logic;
-    signal increament_sp: std_logic;
+    signal decreament_sp_signal: std_logic;
+    signal increament_sp_signal: std_logic;
     signal return_signal: std_logic;
     signal stall1: std_logic:= '0';
     signal reg_write1_signal: std_logic;
@@ -54,6 +57,7 @@ architecture control_unit_arch of control_unit is
     signal memory_write_signal: std_logic;
     signal alu_src2_signal: std_logic;
     signal out_signal_signal: std_logic;
+    signal in_signal_signal: std_logic;
     signal alu_enable_signal: std_logic;
     signal jz_signal: std_logic;
     signal jmp_signal: std_logic;
@@ -112,27 +116,27 @@ architecture control_unit_arch of control_unit is
       ) ;
     end component;
 
-    
+
 
 BEGIN
     nop <= "0000000000000000";
-    
+
     decoderIn <= IR(14) & IR(13);
     decoder:decoder42 PORT MAP(decoderIn, '1', decoderOut);
     x <= (IR_in(15) and (not two_instruction) );
     mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(IR, nop, X, mux2_out);
-    
+
     IR_temp:generic_WAR_reg GENERIC MAP (REG_WIDTH => 16) PORT MAP (IR_in, clk, reset, X, IR_temp_out);
     mux3:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(mux2_out, IR_temp_out, two_instruction, mux3_out);
     mux4:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(mux3_out, nop, flush, IR);
 
     two_inst_mux: mux2_1bit PORT MAP('0', '1', X, two_instruction_mux_out);
-    
+
     two_instruction_input <= ( (not flush) and two_instruction_mux_out );
     IR_out <= IR;
     EA <=  (31 downto 20 => IR_temp_out(3)) & IR_temp_out(3) & IR_temp_out(2) & IR_temp_out(1) & IR_temp_out(0) & IR_in;
     IMM <= (31 downto 16 => IR_in(15)) & IR_in;
-    
+
     one_operand <= decoderOut(0);
     two_operand <= decoderOut(1);
     memory <= decoderOut(2);
@@ -145,25 +149,29 @@ BEGIN
     reg_write1 <= reg_write1_signal;
     reg_write2_signal <= (not reset_flush) AND (two_operand AND (IR(11) AND (not IR(12))));
     reg_write2 <= reg_write2_signal;
-    decreament_sp <= (not reset_flush) AND ((not IR(12)) AND (not IR(11)) AND memory);
-    increament_sp <= (not reset_flush) AND ((not IR(12)) AND IR(11) AND memory);
+    decreament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND (not IR(11)) AND memory);
+    increament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND IR(11) AND memory);
+    decreament_sp <= decreament_sp_signal;
+    increament_sp <= increament_sp_signal;
     return_signal <= (not reset_flush) AND (branch AND IR(12) AND (not IR(9)));
-    memory_read_signal <= (not reset_flush) AND (increament_sp OR return_signal OR RTI OR (IR(10) AND IR(9) AND memory));
+    memory_read_signal <= (not reset_flush) AND (increament_sp_signal OR return_signal OR RTI OR (IR(10) AND IR(9) AND memory));
     memory_read <= memory_read_signal;
-    memory_write_signal <= (not reset_flush) AND (decreament_sp OR call OR interrupt OR (IR(11) AND IR(12) AND memory));
+    memory_write_signal <= (not reset_flush) AND (decreament_sp_signal OR call OR interrupt OR (IR(11) AND IR(12) AND memory));
     memory_write <= memory_write_signal;
     alu_src2_signal <= (not reset_flush) AND (IR(11) AND IR(12));
     alu_src2 <= alu_src2_signal;
     out_signal_signal <=  (not reset_flush) AND (IR(9) AND IR(10) AND (not IR(11)) AND (not IR(12)) AND one_operand);
     out_signal <= out_signal_signal;
+    in_signal_signal <=  (not reset_flush) AND (IR(9) AND (not IR(10)) AND IR(11) AND IR(12) AND one_operand);
+    in_signal <= in_signal_signal;
     alu_enable_signal <=  (not reset_flush) AND (not (((not IR(12)) AND (not IR(11)) AND (not IR(13))) OR (IR(11) AND IR(12) AND (not IR(13))) OR IR(14)));
     alu_enable <= alu_enable_signal;
     jz_signal <=  (not reset_flush) AND (IR(13) AND (not IR(12)) AND (not IR(9)));
     jz <= jz_signal;
     jmp_signal <= (not reset_flush) AND (IR(13) AND (not IR(12)) AND IR(9));
     jmp <= jmp_signal;
-    
 
-    
+
+
 
 end control_unit_arch;

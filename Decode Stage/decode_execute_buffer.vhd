@@ -20,7 +20,10 @@ port (
   OUT2: in std_logic_vector (31 downto 0);
   EA: in std_logic_vector (31 downto 0);
   IMM: in std_logic_vector (31 downto 0);
+  decreament_sp: in std_logic;
+  increament_sp: in std_logic;
   OUT_SIGNAL: in std_logic;
+  IN_SIGNAL: in std_logic;
   MEMEORY_READ: in std_logic;
   MEMORY_WRITE: in std_logic;
   ALU_SRC2: in std_logic;
@@ -44,7 +47,10 @@ port (
   OUT2_out: out std_logic_vector (31 downto 0);
   EA_out: out std_logic_vector (31 downto 0);
   IMM_out: out std_logic_vector (31 downto 0);
+  decreament_sp_out: out std_logic;
+  increament_sp_out: out std_logic;
   OUT_SIGNAL_out: out std_logic;
+  IN_SIGNAL_out: out std_logic;
   MEMEORY_READ_out: out std_logic;
   MEMORY_WRITE_out: out std_logic;
   ALU_SRC2_out: out std_logic;
@@ -105,11 +111,14 @@ architecture  decode_execute_buffer_arch of decode_execute_buffer is
     EA_BUFFER:generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) PORT MAP (EA, CLK, RESET, STALL_reg_out, EA_out);
     IMM_BUFFER:generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) PORT MAP (IMM, CLK, RESET, STALL_reg_out, IMM_out);
     OUT_SIGNAL_BUFFER:WAR_latch PORT MAP (OUT_SIGNAL, CLK, RESET, STALL_reg_out, OUT_SIGNAL_out);
+    IN_SIGNAL_BUFFER:WAR_latch PORT MAP (IN_SIGNAL, CLK, RESET, STALL_reg_out, IN_SIGNAL_out);
     MEMEORY_READ_BUFFER:WAR_latch PORT MAP (MEMEORY_READ, CLK, RESET, STALL_reg_out, MEMEORY_READ_out);
     MEMORY_WRITE_BUFFER:WAR_latch PORT MAP (MEMORY_WRITE, CLK, RESET, STALL_reg_out, MEMORY_WRITE_out);
     ALU_SRC2_BUFFER:WAR_latch PORT MAP (ALU_SRC2, CLK, RESET, STALL_reg_out, ALU_SRC2_out);
     ALU_ENABLE_BUFFER:WAR_latch PORT MAP (ALU_ENABLE, CLK, RESET, STALL_reg_out, ALU_ENABLE_out);
     JZ_BUFFER:WAR_latch PORT MAP (JZ, CLK, RESET, STALL_reg_out, JZ_out);
     JMP_BUFFER:WAR_latch PORT MAP (JMP, CLK, RESET, STALL_reg_out, JMP_out);
+    decreament_sp_BUFFER:WAR_latch PORT MAP (decreament_sp, CLK, RESET, STALL_reg_out, decreament_sp_out);
+    increament_sp_BUFFER:WAR_latch PORT MAP (increament_sp, CLK, RESET, STALL_reg_out, increament_sp_out);
 
 end decode_execute_buffer_arch;
