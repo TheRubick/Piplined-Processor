@@ -71,6 +71,7 @@ INC_Latch  : WAR_latch port map(INC_IN, CLK, reset,'1', INC_OUT);
 DEC_Latch  : WAR_latch port map(DEC_IN, CLK, reset,'1', DEC_OUT);
 DP1_Latch  : WAR_latch port map(DP1_IN, CLK, reset,'1', DP1_OUT);
 DP2_Latch  : WAR_latch port map(DP2_IN, CLK, reset,'1', DP2_OUT);
+ALU_Latch  : WAR_latch port map(ALU_Enable_EX_IN, CLK, reset,'1', ALU_Enable_EX_OUT);
 
 
 end a_EX_MEM_Buffer ;
