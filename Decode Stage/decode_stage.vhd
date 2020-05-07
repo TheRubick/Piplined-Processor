@@ -14,6 +14,8 @@ entity decode_stage is
     RTI: in std_logic;
     TWO_INST: in std_logic;
     jump_reg_add: in std_logic_vector (2 downto 0);
+    dst1_add: in std_logic_vector (2 downto 0);
+    dst2_add: in std_logic_vector (2 downto 0);
     dst1_data: in std_logic_vector (31 downto 0);
     dst2_data: in std_logic_vector (31 downto 0);
     dst1_write_enable: in std_logic;
@@ -43,7 +45,7 @@ entity decode_stage is
     IMM:out std_logic_vector (31 downto 0);
     decreament_sp: out std_logic;
     increament_sp: out std_logic;
-    TEMP_OUT:out std_logic_vector(3 downto 0);
+    TEMP_OUT:out std_logic_vector(4 downto 0);
     jump_reg_data: out std_logic_vector (31 downto 0);
     out1_data: out std_logic_vector (31 downto 0);
     out2_data: out std_logic_vector (31 downto 0);
@@ -115,9 +117,6 @@ architecture  decode_stage_arch of decode_stage is
     end component;
 
     signal src2_add: std_logic_vector(2 downto 0);
-    signal dst1_add: std_logic_vector(2 downto 0);
-    signal dst2_add: std_logic_vector(2 downto 0);
-
 
     signal IR_8_6: std_logic_vector(2 downto 0);
     signal IR_2_0: std_logic_vector (2 downto 0);
@@ -130,8 +129,6 @@ architecture  decode_stage_arch of decode_stage is
 
     IR_8_6 <= IR(8 downto 6);
     IR_2_0 <= IR(2 downto 0);
-    dst1_add <= IR_2_0;
-    dst2_add <= mux2_out;
     src2_add <= IR(5 downto 3);
     dst1_add_out <= dst1_add;
     dst2_add_out<= dst2_add;
@@ -142,7 +139,7 @@ architecture  decode_stage_arch of decode_stage is
     INT_out <=  INT;
     RTI_out <= (RTI and (not (flush or reset)));
 
-
+    TEMP_OUT <= IR(13 downto 9);
 
 
 

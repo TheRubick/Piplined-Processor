@@ -54,6 +54,8 @@ architecture jdmain_arch of jdmain is
           RTI: in std_logic;
           TWO_INST: in std_logic;
           jump_reg_add: in std_logic_vector (2 downto 0);
+          dst1_add: in std_logic_vector (2 downto 0);
+          dst2_add: in std_logic_vector (2 downto 0);
           dst1_data: in std_logic_vector (31 downto 0);
           dst2_data: in std_logic_vector (31 downto 0);
           dst1_write_enable: in std_logic;
@@ -238,7 +240,7 @@ architecture jdmain_arch of jdmain is
 
 
     -- missing input signals to decode
-    
+
     --decode out signals
     signal call_Dout: std_logic;
     signal RET_Dout: std_logic;
@@ -326,7 +328,7 @@ architecture jdmain_arch of jdmain is
 
 
 begin
-    
+
     --FETCH
     Jmp_PC_inFetch <="00000000000000000000000000000000";
     fetchStage: Fetch port map(clk,reset_sg,interrupt_sg,STALL_Dout,RET_EX_OUT, RTI_EX_OUT,
@@ -347,7 +349,7 @@ begin
     --DECODE
 
     Decode: decode_stage port map(clk,reset_module_out_fromFetch,Flush_out,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
-        jump_reg_add_fromFetch,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,call_Dout,RET_Dout,PC_IF_EX_Dout,
+        jump_reg_add_fromFetch,dst1_add_wb_out,dst2_add_wb_out,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,call_Dout,RET_Dout,PC_IF_EX_Dout,
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
@@ -387,41 +389,41 @@ begin
             );
 
   -- connect Execute Stage
-  execute_component : EX_STAGE port map(clk, reset_module_out_fromFetch, IR_out_ID_EX, INT_out_ID_EX, 
-  JZ_out_ID_EX, '0', '0', '0', '0', '0', '0', '0', STALL_out_ID_EX, OUT1_out_ID_EX, 
-  OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX, 
-  Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,  
+  execute_component : EX_STAGE port map(clk, reset_module_out_fromFetch, IR_out_ID_EX, INT_out_ID_EX,
+  JZ_out_ID_EX, '0', '0', '0', '0', '0', '0', '0', STALL_out_ID_EX, OUT1_out_ID_EX,
+  OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
+  Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,
   Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX);
 
   -- Execute Memory Buffer
-  EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, '0', 
-                            PC_EX, ADD_DST1_EX, DATA_DST2_EX, 
-                            PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT, 
-                            REG1_WR_out_ID_EX, REG2_WR_out_ID_EX,MEMORY_WRITE_out_ID_EX,MEMEORY_READ_out_ID_EX , 
-                            reg1_wr_EX_OUT, reg2_wr_EX_OUT, MEM_WR_OUT, MEM_RD_OUT, 
-                            CALL_out_ID_EX, RET_out_ID_EX, RTI_out_ID_EX, OUT_SIGNAL_out_ID_EX,IN_SIGNAL_out_ID_EX,INT_out_ID_EX,increament_sp_ID_EX,decreament_sp_ID_EX,DP1_EX, DP2_EX, 
+  EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, '0',
+                            PC_EX, ADD_DST1_EX, DATA_DST2_EX,
+                            PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT,
+                            REG1_WR_out_ID_EX, REG2_WR_out_ID_EX,MEMORY_WRITE_out_ID_EX,MEMEORY_READ_out_ID_EX ,
+                            reg1_wr_EX_OUT, reg2_wr_EX_OUT, MEM_WR_OUT, MEM_RD_OUT,
+                            CALL_out_ID_EX, RET_out_ID_EX, RTI_out_ID_EX, OUT_SIGNAL_out_ID_EX,IN_SIGNAL_out_ID_EX,INT_out_ID_EX,increament_sp_ID_EX,decreament_sp_ID_EX,DP1_EX, DP2_EX,
                             CALL_EX_OUT, RET_EX_OUT, RTI_EX_OUT, OUT_OUT, IN_OUT, INT_EX_OUT ,INC_OUT, DEC_OUT, DP1_OUT, DP2_OUT,
                             DST1_ADD_out_ID_EX,DST2_ADD_out_ID_EX,
                             dst1_add_EX_OUT,dst2_add_EX_OUT,
-                            ALU_ENABLE_out_ID_EX, 
+                            ALU_ENABLE_out_ID_EX,
                             ALU_Enable_EX_OUT );
-  
+
   -- notes  - all dp loadcase is missing and inc , dec , in signals and Dst1_EX, Dst1_MEM, Dst2_EX, Dst2_MEM,  JMP_INT_PC are also missing
-  
+
   --Memory Stage , NOT ALU signal , dst1_mem,dst2_mem are missing , modify input port i.e. remove it from the inputs
   Memory_stage_component : Memory_stage_entity port map(clk, reset_module_out_fromFetch, reg1_wr_EX_OUT, reg2_wr_EX_OUT, dst1_add_EX_OUT, dst2_add_EX_OUT, MEM_RD_OUT, MEM_WR_OUT,OUT_OUT,IN_OUT,
                       CALL_EX_OUT,INC_OUT,DEC_OUT,RET_EX_OUT,RTI_EX_OUT,INT_EX_OUT,ALU_Enable_EX_OUT,DP1_OUT,DP2_OUT,ADD_DST1_OUT,DATA_DST2_OUT,dst1_wb_out,dst2_wb_out,
                       PC_OUT,in_port,
                       reg1_mem_out,reg2_mem_out,dst1_add_mem_out,dst2_add_mem_out, -- output signals
                       dst1_mem_out,dst2_mem_out,out_port,mem_data_to_fetch);
-  
+
   --WriteBack Stage
   WriteBack_stage_component : Mem_WB_entity port map(reg1_mem_out,reg2_mem_out,clk,reset_module_out_fromFetch,dst1_add_mem_out,dst2_add_mem_out,
                       dst1_mem_out,dst2_mem_out,
                       reg1_wb_out,reg2_wb_out,dst1_add_wb_out,dst2_add_wb_out, -- output signals
                       dst1_wb_out,dst2_wb_out
                       );
-  
+
 
 
 end jdmain_arch ; -- arch
