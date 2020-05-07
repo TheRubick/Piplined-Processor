@@ -14,7 +14,7 @@ ENTITY Memory_stage_entity IS
 		address_dst1_ex,data_dst2_ex,dst1_mem,dst2_mem,pc_ex_mem,input_port  : IN  std_logic_vector(31 DOWNTO 0);
 		reg1_wr_ex_output,reg2_wr_ex_output : OUT std_logic;
 		dst1_add_ex_output,dst2_add_ex_output : OUT std_logic_vector(2 downto 0);
-		dst1_mem_output,dst2_mem_output,out_port_output : OUT std_logic_vector(31 DOWNTO 0)
+		dst1_mem_output,dst2_mem_output,out_port_output,mem_data_to_fetch : OUT std_logic_vector(31 DOWNTO 0)
 		);
 END ENTITY Memory_stage_entity;
 
@@ -121,6 +121,7 @@ BEGIN
 		WR_sig <= SF or mem_wr_ex;
 		
 		dataMemComponent : dataMemory port map(clk,WR_sig,current_address,current_data,datamem1);
+		mem_data_to_fetch <= datamem1;
 		
 		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(datamem1,dp1MuxOutput,RD_sig,dataMem2);
 		inputPortMuxDataMem2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataMem2,input_port,in_ex,dst1_mem_output);
