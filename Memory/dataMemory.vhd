@@ -6,6 +6,7 @@ ENTITY dataMemory IS
 	PORT(
 		clk : IN std_logic;
 		we  : IN std_logic;
+		re : IN std_logic;
 		address : IN  std_logic_vector(31 DOWNTO 0);
 		datain  : IN  std_logic_vector(31 DOWNTO 0);
 		dataout : OUT std_logic_vector(31 DOWNTO 0));
@@ -25,7 +26,7 @@ ARCHITECTURE dataMemoryArch OF dataMemory IS
 					END IF;
 				END IF;
 		END PROCESS;
-		dataout <= ram(to_integer(unsigned(address)));
+		dataout <= ram(to_integer(unsigned(address))) when re = '1';
 END dataMemoryArch;
 
 

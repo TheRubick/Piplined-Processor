@@ -77,6 +77,7 @@ component dataMemory IS
 	PORT(
 		clk : IN std_logic;
 		we  : IN std_logic;
+		re : IN std_logic;
 		address : IN  std_logic_vector(31 DOWNTO 0);
 		datain  : IN  std_logic_vector(31 DOWNTO 0);
 		dataout : OUT std_logic_vector(31 DOWNTO 0));
@@ -120,7 +121,7 @@ BEGIN
 		RD_sig <= RF or mem_rd_ex;
 		WR_sig <= SF or mem_wr_ex;
 		
-		dataMemComponent : dataMemory port map(clk,WR_sig,current_address,current_data,datamem1);
+		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address,current_data,datamem1);
 		mem_data_to_fetch <= datamem1;
 		
 		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(datamem1,dp1MuxOutput,RD_sig,dataMem2);
