@@ -85,7 +85,7 @@ architecture jdmain_arch of jdmain is
           IMM:out std_logic_vector (31 downto 0);
           decreament_sp: out std_logic;
           increament_sp: out std_logic;
-          TEMP_OUT:out std_logic_vector(3 downto 0);
+          TEMP_OUT:out std_logic_vector(4 downto 0);
           jump_reg_data: out std_logic_vector (31 downto 0);
           out1_data: out std_logic_vector (31 downto 0);
           out2_data: out std_logic_vector (31 downto 0);
@@ -265,7 +265,7 @@ architecture jdmain_arch of jdmain is
     signal IMM_Dout: std_logic_vector (31 downto 0);
     signal decreament_sp_Dout: std_logic;
     signal increament_sp_Dout: std_logic;
-    signal TEMP_OUT_Dout: std_logic_vector(3 downto 0);
+    signal TEMP_OUT_Dout: std_logic_vector(4 downto 0);
     signal jump_reg_data_Dout:  std_logic_vector (31 downto 0);
     signal out1_data_Dout:  std_logic_vector (31 downto 0);
     signal out2_data_Dout:  std_logic_vector (31 downto 0);
