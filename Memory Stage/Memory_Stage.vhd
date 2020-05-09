@@ -121,10 +121,11 @@ BEGIN
 		RD_sig <= RF or mem_rd_ex;
 		WR_sig <= SF or mem_wr_ex;
 		
+		current_address <= current_address when current_address < 1024 else "00000000000000000000000000000000";
 		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address,current_data,datamem1);
 		mem_data_to_fetch <= datamem1;
 		
-		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(datamem1,dp1MuxOutput,RD_sig,dataMem2);
+		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxOutput,datamem1,RD_sig,dataMem2);
 		inputPortMuxDataMem2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataMem2,input_port,in_ex,dst1_mem_output);
 		
 	--output port part
