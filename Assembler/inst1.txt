@@ -1,0 +1,19 @@
+.ORG 0
+10
+.ORG 2
+100
+.ORG 10
+inc R1
+inc R2
+Dec R4
+ADD R5,R1,R3
+dec r1
+inc r6
+SUB R6,r7,R5
+inc R0
+Std R4,14
+Std R5,16
+rti
+.DATA
+4
+5

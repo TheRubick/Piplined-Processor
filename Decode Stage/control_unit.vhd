@@ -43,14 +43,12 @@ architecture control_unit_arch of control_unit is
     signal mux1_out: std_logic;
     signal mux2_out: std_logic_vector (15 downto 0);
     signal mux3_out: std_logic_vector (15 downto 0);
-    signal mux4_out: std_logic_vector (15 downto 0);
     signal X: std_logic:= '0';
     signal nop: std_logic_vector (15 downto 0);
     signal IR_temp_out: std_logic_vector (15 downto 0);
     signal decreament_sp_signal: std_logic;
     signal increament_sp_signal: std_logic;
     signal return_signal: std_logic;
-    signal stall1: std_logic:= '0';
     signal reg_write1_signal: std_logic;
     signal reg_write2_signal: std_logic;
     signal memory_read_signal: std_logic;
@@ -62,8 +60,6 @@ architecture control_unit_arch of control_unit is
     signal jz_signal: std_logic;
     signal jmp_signal: std_logic;
     signal stall_out: std_logic;
-    signal mux3_sel: std_logic;
-    signal IR_bit15: std_logic;
     signal IR: std_logic_vector (15 downto 0);
     signal two_instruction_mux_out: std_logic;
 
@@ -123,8 +119,8 @@ BEGIN
 
     decoderIn <= IR(14) & IR(13);
     decoder:decoder42 PORT MAP(decoderIn, '1', decoderOut);
-    x <= (IR_in(15) and (not two_instruction) );
-    mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(IR, nop, X, mux2_out);
+    X <= (IR_in(15) and (not two_instruction) );
+    mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(IR_in, nop, X, mux2_out);
 
     IR_temp:generic_WAR_reg GENERIC MAP (REG_WIDTH => 16) PORT MAP (IR_in, clk, reset, X, IR_temp_out);
     mux3:mux2_generic GENERIC MAP (INPUT_WIDTH => 16) PORT MAP(mux2_out, IR_temp_out, two_instruction, mux3_out);
