@@ -13,7 +13,6 @@ SUB R6,r7,R5
 inc R0
 Std R4,14
 Std R5,16
-rti
 .DATA
 4
 5
