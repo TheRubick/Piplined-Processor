@@ -77,9 +77,23 @@ architecture Interrupt_arch of Interrupt is
           
             ) ;
           end component;
+          component generic_RAW_reg is
+            GENERIC(
+               REG_WIDTH : INTEGER := 16);
+              port (
+                d: in std_logic_vector (REG_WIDTH - 1 downto 0);
+                clk: in std_logic;
+                clear: in std_logic;
+            enable: in std_logic;
+                q: out std_logic_vector (REG_WIDTH - 1 downto 0)
+            
+              ) ;
+          end component;
+            
     signal int_sg_AndToMux, muxTointLatch, intLatchTOAnd1, And1, int_latch_enable, int_out,or1: std_logic;
     signal Mux41Out, And2, Reg1_enable, Reg2_enable, Jmpz2_latch_enable, INT_Buffer: std_logic;
     signal INT2_Buffer, INT3_Buffer, reset1_Buffer, Jmpz2_Buffer, reset_Buffer: std_logic;
+    signal reset1_latch_input,reset1_latch_en: std_logic;
     signal INTZF_Buffer, IntZ_notF_Buffer: std_logic;
     signal encoder_Input: std_logic_vector (3 downto 0);
     signal mux41_selectors: std_logic_vector (1 downto 0);
@@ -119,18 +133,20 @@ begin
     one_stall_int <= ( (not Prediction_Done) and int_out and (not INT_Buffer) and Jmpz2_Buffer);
 
     Reg1_enable <= reset_sg or INT2_Buffer;
-    Reg1: generic_WAR_reg GENERIC map (REG_WIDTH => 16) port map(IR,clk,reset_Buffer,Reg1_enable, Reg1_out);
+    Reg1: generic_WAR_reg GENERIC map (REG_WIDTH => 16) port map(IR,clk,'0',Reg1_enable, Reg1_out);
 
     Reg2_enable <= reset1_Buffer or INT3_Buffer;
-    Reg2: generic_WAR_reg GENERIC map (REG_WIDTH => 16) port map(IR,clk,reset_Buffer,Reg2_enable, Reg2_out);
-
-    ISR_PC <= (Reg1_out & Reg2_out);
+    Reg2: generic_WAR_reg GENERIC map (REG_WIDTH => 16) port map(IR,clk,'0',Reg2_enable, Reg2_out);
+    -- Reg2_out changed to IR
+    ISR_PC <= (Reg1_out & IR);
 
     reset_Buffer <= reset_sg or reset1_Buffer;
     reset <=reset_Buffer;
-
-    reset1_latch: WAR_latch port map(reset_sg,clk,reset1_Buffer,reset_sg, reset1_Buffer);
-    reset1 <= reset1_Buffer;
+    reset1_latch_input <= '0' when reset1_Buffer = '1' else reset_sg;
+    reset1_latch_en <= '1' when reset1_Buffer = '1' else reset_sg;
+    reset1_latch: WAR_latch port map(reset1_latch_input,clk,'0',reset1_latch_en, reset1_Buffer);
+    -- temp at first reset1 is U and that makes problems in fetch
+    reset1 <= '0' when reset_sg = '1' else reset1_Buffer;
     Jmpz2_latch_enable <= JMPZ and JMP_Ready;
     jmpz2_latch: WAR_latch port map(JMPZ,clk,Prediction_Done,Jmpz2_latch_enable, Jmpz2_Buffer);
     

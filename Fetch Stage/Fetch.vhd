@@ -73,6 +73,33 @@ architecture Fetch_arch of Fetch is
         
           ) ;
      end component;
+     component Interrupt is
+      port (
+        clk: in std_logic;
+        interrupt_sg: in std_logic;
+        reset_sg: in std_logic;
+        JMP: in std_logic;
+        RET: in std_logic;
+        RTI: in std_logic;
+        JMPZ: in std_logic;
+        IR: in std_logic_vector (15 downto 0);
+        RTI_MEM: in std_logic;
+        RET_MEM: in std_logic;
+        JMP_Ready: in std_logic;
+        Prediction_Done: in std_logic;
+        reset: out std_logic;
+        reset1: out std_logic;
+        INT: out std_logic;
+        INT2: out std_logic;
+        INT3: out std_logic;
+        INTZF: out std_logic;
+        IntZ_notF: out std_logic;
+        Jmpz2: out std_logic;
+        ISR_PC: out std_logic_vector (31 downto 0);
+        one_stall_int: out std_logic
+      ) ;
+    end component;
+    
 
    -- interrrupt temp signals 
     signal reset,reset1,INT,INT2,INT3,INTZF,IntZ_notF,Jmpz2,one_stall_int:  std_logic;
@@ -94,18 +121,23 @@ architecture Fetch_arch of Fetch is
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
 
 begin
+
+  -- interrupt 
+  interrupt_module: Interrupt port map(clk,interrupt_sg,reset_sg,JMP,RET,RTI,JMPZ,IR,RTI_Ex_MEM,RET_Ex_MEM,
+                      Jmp_Ready,Prediction_Done,
+                      reset,reset1,INT,INT2,INT3,INTZF,IntZ_notF,Jmpz2,ISR_PC,one_stall_int);
     jump_reg_add <= "000";
     --temp signasl of interrupt
-    reset <= reset_sg;
-    reset1 <= '0';
-    INT <= '0';
-    INT2 <= '0';
-    INT3 <= '0';
-    INTZF <= '0';
-    IntZ_notF <= '0';
-    Jmpz2 <= '0';
-    ISR_PC <= (others =>'0');
-    one_stall_int <= '0';
+    --reset <= reset_sg;
+    --reset1 <= '0';
+    --INT <= '0';
+    --INT2 <= '0';
+    --INT3 <= '0';
+    --INTZF <= '0';
+    --IntZ_notF <= '0';
+    --Jmpz2 <= '0';
+    --ISR_PC <= (others =>'0');
+    --one_stall_int <= '0';
     --is Jump
     JMP <= '0';
     JMPZ <= '0';
@@ -181,7 +213,7 @@ begin
     PCMux: mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(PC_Input,ISR_PC,mem1,ISR_PC,PCMux_selector,PCMux_out);
 
     PC_reg_enable <= (not one_stall_int);
-    PCReg: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(PCMux_out,clk,reset,PC_reg_enable,PC);
+    PCReg: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(PCMux_out,clk,'0',PC_reg_enable,PC);
 
     PC_plus_one <= PC + 1;
     

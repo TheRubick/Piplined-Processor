@@ -1,4 +1,5 @@
 vsim -gui work.fetch
+mem load -i {D:/CMP 2021/Arch/Project/Piplined-Processor/Assembler/instructionMemory.mem} /fetch/memory/ram
 add wave -position insertpoint sim:/fetch/*
 force -freeze sim:/fetch/clk 1 0, 0 {50 ps} -r 100
 force -freeze sim:/fetch/reset_sg 1 0
@@ -14,5 +15,6 @@ force -freeze sim:/fetch/Jmp_PC 00000000000000000000000000000000 0
 force -freeze sim:/fetch/Mem_data 00000000000000000000000000000000 0
 force -freeze sim:/fetch/PC_ID_EX 00000000000000000000000000000000 0
 run
+
 force -freeze sim:/fetch/reset_sg 0 0
 run
