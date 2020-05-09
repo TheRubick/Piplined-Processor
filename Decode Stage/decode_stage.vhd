@@ -130,8 +130,8 @@ architecture  decode_stage_arch of decode_stage is
     IR_8_6 <= IR(8 downto 6);
     IR_2_0 <= IR(2 downto 0);
     src2_add <= IR(5 downto 3);
-    dst1_add_out <= dst1_add;
-    dst2_add_out<= dst2_add;
+    dst1_add_out <= IR_2_0;
+    dst2_add_out <= mux2_out;
     STALL <= '0';
     call_out <= (CALL and (not (flush or reset)));
     RET_out <=  (RET and (not (flush or reset)));
