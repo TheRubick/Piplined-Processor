@@ -1,0 +1,42 @@
+.ORG 0
+10
+.ORG 2
+100
+#sdfdsf
+#.ORG 255
+#dfs
+#df
+.ORG 255
+inc R1
+inc R2
+Dec R4
+ADD R5,R1,R3
+dec r1
+inc r6
+SUB R6,r7,R5
+#nop
+#not r3
+#inc r5
+#dec r6
+#out r1
+#in r7
+#or r1,r2,r3
+#swap r3,r4
+#iadd r3,r4, FA
+#add r3,r4,r5
+#shr r4, F8
+#and r3,r3,r5
+#shl r1, 55
+#call r5
+#jmp r7
+#jz r3
+#ret
+#rti
+#pop r4 #sdfdsf
+#push r6
+#ldd r5, FFFFF
+#ldm r5 , F8
+#sTd r7, EEEEE
+.DATA
+4
+5
