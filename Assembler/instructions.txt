@@ -15,8 +15,9 @@ dec r1
 inc r6
 SUB R6,r7,R5
 inc R0
-Std R3,14
+Std R4,14
 Std R5,16
+rtii
 #nop
 #not r3
 #inc r5

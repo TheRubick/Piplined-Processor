@@ -1,7 +1,7 @@
 import re
-
+import sys
 #Return a list containing every occurrence of "ai":
-def calReg(instruction,oneTwoThreeOp,instructionFunction):
+def calReg(instruction,oneTwoThreeOp,instructionFunction,errorFlag):
     
     regField = list("000000000")
     Reg = re.findall("[R-r][0-9]", instruction)
@@ -32,8 +32,11 @@ def calReg(instruction,oneTwoThreeOp,instructionFunction):
             regField[3*i:3*(i+1)] = "101"
         elif(Reg[i][1] == "6"):
             regField[3*i:3*(i+1)] = "110"
-        else:
+        elif(Reg[i][1] == "7"):
             regField[3*i:3*(i+1)] = "111"
+        else:
+            errorFlag = True
+            return "","","",errorFlag
 
     #if it is one instruction but not NOP
     if(isOneInstruction):
@@ -84,10 +87,10 @@ def calReg(instruction,oneTwoThreeOp,instructionFunction):
     #print("one is "+instruction[1:3])
 
     regField = "".join(regField)
-    return regField,immediateValue,EAValue
+    return regField,immediateValue,EAValue,errorFlag
 
 
-inputFile = open("instructions.txt", "r")
+inputFile = open(sys.argv[1], "r")
 outputFile = open("instructionMemory.mem", "w")
 outputFile.write('// memory data file (do not edit the following line - required for mem load use)\n')
 outputFile.write('// instance=/ram/ram\n')
@@ -105,6 +108,8 @@ isOrgAddress = False
 PCValue = 0
 InterruptAddress = 0
 dataPointer = 0
+lineNumber = 0
+errorFlag = False
 for instruction in inputFile:
     #first we need to load the reset and interrupt instructions
     #to ignore the white lines
@@ -158,57 +163,70 @@ for instruction in inputFile:
 
                     instructionFunction = ""
                     
-                    if("nop" in instruction.lower()):
+                    #instruction operation text
+                    instructionOperation = re.findall("[a-zA-Z]*",instruction)[0]
+                    if("nop" == instructionOperation.lower()):
                         instructionFunction = "0000000"
-                    elif("not" in instruction.lower()):
+                    elif("not" == instructionOperation.lower()):
                         instructionFunction = "0000100"
-                    elif("inc" in instruction.lower()):
+                    elif("inc" == instructionOperation.lower()):
                         instructionFunction = "0001001"
-                    elif("dec" in instruction.lower()):
+                    elif("dec" == instructionOperation.lower()):
                         instructionFunction = "0001000"
-                    elif("out" in instruction.lower()):
+                    elif("out" == instructionOperation.lower()):
                         instructionFunction = "0000011"
-                    elif("in" in instruction.lower()):
+                    elif("in" == instructionOperation.lower()):
                         instructionFunction = "0001101"
-                    elif("add" in instruction.lower() and not("iadd" in instruction.lower())):
+                    elif("add" == instructionOperation.lower() and not("iadd" == instructionOperation.lower())):
                         instructionFunction = "0010000"
-                    elif("sub" in instruction.lower()):
+                    elif("sub" == instructionOperation.lower()):
                         instructionFunction = "0010001"
-                    elif("and" in instruction.lower()):
+                    elif("and" == instructionOperation.lower()):
                         instructionFunction = "0010010"
-                    elif("or" in instruction.lower()):
+                    elif("or" == instructionOperation.lower()):
                         instructionFunction = "0010011"
-                    elif("swap" in instruction.lower()):
+                    elif("swap" == instructionOperation.lower()):
                         instructionFunction = "0010100"
-                    elif("iadd" in instruction.lower()):
+                    elif("iadd" == instructionOperation.lower()):
                         instructionFunction = "1011110"
-                    elif("shl" in instruction.lower()):
+                    elif("shl" == instructionOperation.lower()):
                         instructionFunction = "1011100"
-                    elif("shr" in instruction.lower()):
+                    elif("shr" == instructionOperation.lower()):
                         instructionFunction = "1011101"
-                    elif("pop" in instruction.lower()):
+                    elif("pop" == instructionOperation.lower()):
                         instructionFunction = "0100001"
-                    elif("push" in instruction.lower()):
+                    elif("push" == instructionOperation.lower()):
                         instructionFunction = "0100100"
-                    elif("ldm" in instruction.lower()):
+                    elif("ldm" == instructionOperation.lower()):
                         instructionFunction = "1101001"
-                    elif("ldd" in instruction.lower()):
+                    elif("ldd" == instructionOperation.lower()):
                         instructionFunction = "1101011"
-                    elif("std" in instruction.lower()):
+                    elif("std" == instructionOperation.lower()):
                         instructionFunction = "1101110"
-                    elif("jz" in instruction.lower()):
+                    elif("jz" == instructionOperation.lower()):
                         instructionFunction = "0110000"
-                    elif("jmp" in instruction.lower()):
+                    elif("jmp" == instructionOperation.lower()):
                         instructionFunction = "0110001"
-                    elif("call" in instruction.lower()):
+                    elif("call" == instructionOperation.lower()):
                         instructionFunction = "0110010"
-                    elif("ret" in instruction.lower()):
+                    elif("ret" == instructionOperation.lower()):
                         instructionFunction = "0111100"
-                    else:
+                    elif("rti" == instructionOperation.lower()):
                         instructionFunction = "0111101"
+                    else:
+                        print("error !! , improper instruction in line "+str(lineNumber+1))
+                        errorFlag = True
                             
-                        
-                        
+                    
+                    improperSymbols = re.findall('[@!~$%^&*()\-+/.]',instruction)
+                    #print(improperSymbols)    
+                    if(len(improperSymbols) > 0):
+                        print("error !! , improper symbols in line "+str(lineNumber+1))
+                        errorFlag = True
+                    
+                    
+                    if(errorFlag):
+                        break
                     instructionFunction = "".join(instructionFunction)
                     regField = ""
                     immediateValue = ""
@@ -219,9 +237,15 @@ for instruction in inputFile:
                     #check if the instruction isn't NOP/RTI/RET
                     noRegInstructions = (instructionFunction == "0000000" or instructionFunction == "0111100" or instructionFunction == "0111101")
                     if(not(noRegInstructions)):
-                        regField,immediateValue,EAValue = calReg(instruction,oneTwoThreeOp,instructionFunction)
+                        regField,immediateValue,EAValue,errorFlag = calReg(instruction,oneTwoThreeOp,instructionFunction,errorFlag)
                     else:
                         regField = "000000000"
+                    
+                    #check if there is no error from the register numbers range
+                    if(errorFlag):
+                        print("error !! , plz enter registers number ranged from 0 to 7 in line "+str(lineNumber+1))
+                        break
+                    
                    # print(instructionFunction)
                     #print(instructionFunction+regField)
                     if(EAValue != ""):
@@ -262,23 +286,25 @@ for instruction in inputFile:
             dataPointer += 1
             
         #print("inst pointer = "+str(instructionPointer))
+    lineNumber += 1
 
-for i in range(0,2048):
-    if(i % 4 == 0):
-        outputFile.write(hex(i)[2:]+': ')    
-    if(i < len(instructionMemory)):
-        outputFile.write(instructionMemory[i]+' ')
-    else:
-        outputFile.write("0000000000000000"+' ')
-    if((i+1) % 4 == 0):
-        outputFile.write('\n')
+if(not(errorFlag)):
+    for i in range(0,2048):
+        if(i % 4 == 0):
+            outputFile.write(hex(i)[2:]+': ')    
+        if(i < len(instructionMemory)):
+            outputFile.write(instructionMemory[i]+' ')
+        else:
+            outputFile.write("0000000000000000"+' ')
+        if((i+1) % 4 == 0):
+            outputFile.write('\n')
 
-for i in range(0,1024):
-    if(i % 4 == 0):
-        outputFile2.write(hex(i)[2:]+': ')
-    if(i < len(dataMemory)):
-        outputFile2.write(dataMemory[i]+' ')
-    else:
-        outputFile2.write("00000000000000000000000000000000"+' ')
-    if((i+1) % 4 == 0):
-        outputFile2.write('\n')
+    for i in range(0,1024):
+        if(i % 4 == 0):
+            outputFile2.write(hex(i)[2:]+': ')
+        if(i < len(dataMemory)):
+            outputFile2.write(dataMemory[i]+' ')
+        else:
+            outputFile2.write("00000000000000000000000000000000"+' ')
+        if((i+1) % 4 == 0):
+            outputFile2.write('\n')
