@@ -255,15 +255,15 @@ for instruction in inputFile:
             #print(immediateValueHex)
             if(dataPointer > 0):
                 variableValue = "{0:032b}".format(int(instruction, 16))
-                print(variableValue[:16])
-                dataMemory.append(variableValue[:16])
-                print(variableValue[16:])
-                dataMemory.append(variableValue[16:])
+                #print(variableValue[:16])
+                dataMemory.append(variableValue)
+                #print(variableValue[16:])
+                #dataMemory.append(variableValue[16:])
             dataPointer += 1
             
         #print("inst pointer = "+str(instructionPointer))
 
-for i in range(0,1048576):
+for i in range(0,2048):
     if(i % 4 == 0):
         outputFile.write(hex(i)[2:]+': ')    
     if(i < len(instructionMemory)):
@@ -273,12 +273,12 @@ for i in range(0,1048576):
     if((i+1) % 4 == 0):
         outputFile.write('\n')
 
-for i in range(0,1048576):
+for i in range(0,1024):
     if(i % 4 == 0):
-        outputFile2.write(hex(i)[2:]+': ')    
+        outputFile2.write(hex(i)[2:]+': ')
     if(i < len(dataMemory)):
         outputFile2.write(dataMemory[i]+' ')
     else:
-        outputFile2.write("0000000000000000"+' ')
+        outputFile2.write("00000000000000000000000000000000"+' ')
     if((i+1) % 4 == 0):
         outputFile2.write('\n')
