@@ -8,3 +8,6 @@ work/
 *.exe
 transcript
 *vscode*
+gellesh_instructions.txt
+instructionMemory.mem
+dataMemory.mem
