@@ -143,7 +143,7 @@ architecture  decode_stage_arch of decode_stage is
 
 
 
-    mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 3) PORT MAP(IR_2_0, IR_8_6, memory, mux2_out);
+    mux2:mux2_generic GENERIC MAP (INPUT_WIDTH => 3) PORT MAP(IR_8_6, IR_2_0,memory, mux2_out);
     reg_file1:reg_file PORT MAP (mux2_out, src2_add, dst1_add, dst2_add, jump_reg_add, dst1_data, dst2_data, dst1_write_enable,
                                   dst2_write_enable, out1_data, out2_data, jump_reg_data, clk, reset);
 
