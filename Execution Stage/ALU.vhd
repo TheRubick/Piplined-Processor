@@ -18,7 +18,7 @@ END ALU ;
 ARCHITECTURE a_ALU of ALU is
 
   -- Signals used to store result values
- 
+
 SIGNAL INC, DEC, SUB, ADD, IN1, IN2 : std_logic_vector(32 downto 0):= (others => '0');
 
 SIGNAL OUTPUT : std_logic_vector (31 downto 0) := (others => '0');
@@ -48,7 +48,7 @@ OUTPUT <= INPUTA AND INPUTB   WHEN IR(14 downto 9 ) = "010010" ELSE  -- AND
           ADD(31 downto 0)    WHEN IR(14 downto 9 ) = "010000" ELSE  -- ADD
           ADD(31 downto 0)    WHEN IR(14 downto 9 ) = "011110" ELSE  -- ADI
           SUB(31 downto 0)    WHEN IR(14 downto 9 ) = "010001" ELSE  -- SUB
-          INPUTB              WHEN IR(14 downto 9 ) = "010100" ELSE  -- SWAP
+          INPUTA              WHEN IR(14 downto 9 ) = "010100" ELSE  -- SWAP
           INPUTA ((31 - ShiftValue) downto 0) & SHIFT(31 downto (32 - ShiftValue)) WHEN IR(14 downto 9 ) = "011100" AND ShiftValue /= 0 ELSE  -- LSL
           INPUTA              WHEN IR(14 downto 9 ) = "011100" AND ShiftValue = 0 ELSE  -- LSL at zero shift case
           SHIFT(31 downto (32 - ShiftValue)) & INPUTA (31 downto ShiftValue) WHEN IR(14 downto 9 ) = "011101" AND ShiftValue /= 0 ELSE  -- LSR
