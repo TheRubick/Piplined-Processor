@@ -122,14 +122,14 @@ architecture  decode_stage_arch of decode_stage is
     signal IR_2_0: std_logic_vector (2 downto 0);
     signal mux2_out: std_logic_vector (2 downto 0);
     signal memory: std_logic;
-
+    signal IR_out_signal: std_logic_vector (15 downto 0);
 
     BEGIN
 
-
-    IR_8_6 <= IR(8 downto 6);
-    IR_2_0 <= IR(2 downto 0);
-    src2_add <= IR(5 downto 3);
+    IR_out <= IR_out_signal;
+    IR_8_6 <= IR_out_signal(8 downto 6);
+    IR_2_0 <= IR_out_signal(2 downto 0);
+    src2_add <= IR_out_signal(5 downto 3);
     dst1_add_out <= IR_2_0;
     dst2_add_out <= mux2_out;
     STALL <= '0';
@@ -139,7 +139,7 @@ architecture  decode_stage_arch of decode_stage is
     INT_out <=  INT;
     RTI_out <= (RTI and (not (flush or reset)));
 
-    TEMP_OUT <= IR(13 downto 9);
+    TEMP_OUT <= IR_out_signal(13 downto 9);
 
 
 
@@ -148,7 +148,7 @@ architecture  decode_stage_arch of decode_stage is
                                   dst2_write_enable, out1_data, out2_data, jump_reg_data, clk, reset);
 
     control_unit1:control_unit PORT MAP (clk, reset, flush, IR, CALL, RTI, INT, TWO_INST, reg_write1, reg_write2, memory_read, memory_write,
-                                          alu_src2, out_signal, in_signal, alu_enable, jz, jmp,memory, two_instruction_input, IR_out,EA, IMM,
+                                          alu_src2, out_signal, in_signal, alu_enable, jz, jmp,memory, two_instruction_input, IR_out_signal,EA, IMM,
                                           decreament_sp, increament_sp);
 
 
