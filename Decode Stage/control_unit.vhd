@@ -130,7 +130,7 @@ BEGIN
 
     two_instruction_input <= ( (not flush) and two_instruction_mux_out );
     IR_out <= IR;
-    EA <=  (31 downto 20 => IR_temp_out(3)) & IR_temp_out(3) & IR_temp_out(2) & IR_temp_out(1) & IR_temp_out(0) & IR_in;
+    EA <=  (31 downto 20 => IR_temp_out(6)) & IR_temp_out(6) & IR_temp_out(5) & IR_temp_out(4) & IR_temp_out(3) & IR_in;
     IMM <= (31 downto 16 => IR_in(15)) & IR_in;
 
     one_operand <= decoderOut(0);
