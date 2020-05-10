@@ -15,6 +15,7 @@ NOP
 SUB R3,R1,R4
 NOP
 NOP
+pop R1
 .DATA
 4
 5
