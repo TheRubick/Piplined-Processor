@@ -101,10 +101,10 @@ END component ;
 
 
 --signal result : std_logic_vector(3 downto 0);
-signal firstinput , secondinput_temp, secondinput ,ALUOUT, IMM_OR_EA, ALU_OR_MEM : std_logic_vector(31 downto 0);
+signal firstinput , secondinput_temp, secondinput ,ALUOUT, IMM_OR_EA, ALU_OR_MEM, Swap_operand : std_logic_vector(31 downto 0);
 signal flagin , flagout : std_logic_vector(3 downto 0);
 signal Sel_1, Sel_2 : std_logic_vector(1 downto 0);
-signal Sel, DP_Sel, INT_Sel : std_logic;
+signal Sel, DP_Sel, INT_Sel, Swap : std_logic;
 signal Flush,PR_Done :std_logic;
 
 begin
@@ -121,7 +121,12 @@ INPUT1_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT1, OUT1, 
 INPUT2_Temp_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT2, OUT2, Dst2_EX, Dst2_MEM, Sel_2 ,secondinput_temp);
 INPUT2_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (secondinput_temp, IMM, Sel, secondinput);
 
-DATA_DST2_EX_Mux :  mux2_generic generic map (INPUT_WIDTH => 32) port map (firstinput, Dst2_MEM, Stall, DATA_DST2_EX);
+
+Swap <= '1' WHEN IR(14 downto 9 ) = "010100" Else
+        '0' ;
+        
+Swap_EX_Mux :  mux2_generic generic map (INPUT_WIDTH => 32) port map (firstinput, secondinput, Swap, Swap_operand);
+DATA_DST2_EX_Mux :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Swap_operand, Dst2_MEM, Stall, DATA_DST2_EX);
 
 --- muxes for ADD_DST1_EX
 Imm_or_EA_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (IMM, EA, IR(10), IMM_OR_EA);
