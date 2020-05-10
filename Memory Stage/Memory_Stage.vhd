@@ -130,8 +130,8 @@ BEGIN
 		inputPortMuxDataMem2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dataMem2,input_port,in_ex,dst1_mem_output);
 		
 	--output port part
-		OutPortLatch : generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(dst2_mem_wire,clk,reset,'1',out_port_output); -- here we used wire because we need the dst2_mem output to be "input" in the out port
-	
+		--OutPortLatch : generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(dst2_mem_wire,clk,reset,out_ex,out_port_output); -- here we used wire because we need the dst2_mem output to be "input" in the out port
+		out_port_output <= dst2_mem_wire when out_ex = '1' else "00000000000000000000000000000000";
 	--sp part
 		
 		--sp Latch
