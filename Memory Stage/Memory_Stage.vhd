@@ -87,7 +87,8 @@ END component;
 signal RF,SF,FlagRegEnable,WR_sig,RD_sig,
 		incSpWire,decSpWire : std_logic;
 signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
-signal Flag_CT,current_address,current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
+signal Flag_CT,current_address,current_address_final,
+	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
 	dst2_mem_wire,
 	spInputData,spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
@@ -121,8 +122,8 @@ BEGIN
 		RD_sig <= RF or mem_rd_ex;
 		WR_sig <= SF or mem_wr_ex;
 		
-		current_address <= current_address when current_address < 1024 else "00000000000000000000000000000000";
-		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address,current_data,datamem1);
+		current_address_final <= current_address when current_address < 1024 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
+		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address_final,current_data,datamem1);
 		mem_data_to_fetch <= datamem1;
 		
 		dp1MuxDataMem1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxOutput,datamem1,RD_sig,dataMem2);
