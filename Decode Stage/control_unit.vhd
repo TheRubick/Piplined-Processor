@@ -145,8 +145,8 @@ BEGIN
     reg_write1 <= reg_write1_signal;
     reg_write2_signal <= (not reset_flush) AND (two_operand AND (IR(11) AND (not IR(12))));
     reg_write2 <= reg_write2_signal;
-    decreament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND (not IR(11)) AND memory);
-    increament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND IR(11) AND memory);
+    increament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND (not IR(11)) AND memory);
+    decreament_sp_signal <= (not reset_flush) AND ((not IR(12)) AND IR(11) AND memory);
     decreament_sp <= decreament_sp_signal;
     increament_sp <= increament_sp_signal;
     return_signal <= (not reset_flush) AND (branch AND IR(12) AND (not IR(9)));
