@@ -162,9 +162,9 @@ BEGIN
     in_signal <= in_signal_signal;
     alu_enable_signal <=  (not reset_flush) AND (not (((not IR(12)) AND (not IR(11)) AND (not IR(13))) OR (IR(11) AND IR(12) AND (not IR(13))) OR IR(14)));
     alu_enable <= alu_enable_signal;
-    jz_signal <=  (not reset_flush) AND (IR(13) AND (not IR(12)) AND (not IR(9)));
+    jz_signal <=  (not reset_flush) AND (IR(14) AND IR(13) AND (not IR(12)) AND (not IR(10)) AND (not IR(9)));
     jz <= jz_signal;
-    jmp_signal <= (not reset_flush) AND (IR(13) AND (not IR(12)) AND IR(9));
+    jmp_signal <= (not reset_flush) AND (IR(14) AND IR(13) AND (not IR(12)) AND (not IR(10))  AND IR(9));
     jmp <= jmp_signal;
 
 
