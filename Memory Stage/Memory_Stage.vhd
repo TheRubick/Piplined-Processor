@@ -154,20 +154,20 @@ BEGIN
 	--sp part
 		
 		--sp Latch
-		spLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(spInputData,clk,reset,'1',spOutputData);
+		spLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spOutputData);
 		
 		--incSpWire
 		incSpWire <= inc_ex or RF or SF or rti_ex or int_ex or ret_ex;
 		--decSpWire
 		decSpWire <= dec_ex or int_ex or call_ex;
 		--updateSp Latch
-		updateSpPlusTwo <= spInputData + 1;
-		updateSpMinusTwo <= spInputData - 1;
+		updateSpPlusTwo <= spOutputData + 1;
+		updateSpMinusTwo <= spOutputData - 1;
 		--mux41 of assigning the updateSpInput
 		updateSpSel <= decSpWire & incSpWire;
 		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputData,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
 		
-		updateSpLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spInputData);
+		--updateSpLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spInputData);
 		--dp1MuxOutputMuxspOutput
 		dp1MuxOutputMuxspOutput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxOutput,spOutputData,decSpWire,dp1MuxStackPointerOutput);
 		--dp1MuxStackPointerOutput Mux spInput
