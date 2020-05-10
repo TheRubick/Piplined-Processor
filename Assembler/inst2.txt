@@ -13,7 +13,17 @@ nop
 nop
 nop
 nop
+push R2
+nop
+nop
+nop
+nop
 pop R3
+nop
+nop
+nop
+nop
+pop R5
 .DATA
 4
 5

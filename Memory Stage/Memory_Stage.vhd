@@ -92,7 +92,7 @@ signal Flag_CT,current_address,current_address_final,
 	dst2_mem_wire : std_logic_vector(31 downto 0);
 SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
 SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
-
+SIGNAL spInputDataAux,spOutputDataAux : std_logic_vector(31 downto 0);
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
 
 BEGIN
@@ -138,21 +138,23 @@ BEGIN
 		
 		--sp Latch
 		spLatch: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(spInputData,clk,reset,'1',spOutputData);
+		spInputDataAux <= spInputData when reset = '0' else "00000000000000000000001111111111";
+		spOutputDataAux <= spOutputData when reset = '0' else "00000000000000000000001111111111";
 		--incSpWire
 		incSpWire <= inc_ex or RF or SF or rti_ex or int_ex or ret_ex;
 		--decSpWire
 		decSpWire <= dec_ex or int_ex or call_ex;
 		--updateSp Latch
-		updateSpPlusTwo <= spInputData + 1;
-		updateSpMinusTwo <= spInputData - 1;
+		updateSpPlusTwo <= spInputDataAux + 1;
+		updateSpMinusTwo <= spInputDataAux - 1;
 		--mux41 of assigning the updateSpInput
 		updateSpSel <= decSpWire & incSpWire;
-		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputData,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
+		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputDataAux,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
 		updateSpLatch: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spInputData);
 		--dp1MuxOutputMuxspOutput
-		dp1MuxOutputMuxspOutput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxOutput,spOutputData,decSpWire,dp1MuxStackPointerOutput);
+		dp1MuxOutputMuxspOutput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxOutput,spOutputDataAux,decSpWire,dp1MuxStackPointerOutput);
 		--dp1MuxStackPointerOutput Mux spInput
-		dp1MuxSPOutputMuxspInput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxStackPointerOutput,spInputData,incSpWire,current_address);
+		dp1MuxSPOutputMuxspInput: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dp1MuxStackPointerOutput,updateSpInput,incSpWire,current_address);
 		
 	--Output wires of this stage
 		reg1_wr_ex_output <= reg1_wr_ex;
