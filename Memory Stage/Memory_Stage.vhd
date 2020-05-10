@@ -90,7 +90,7 @@ signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
 signal Flag_CT,current_address,current_address_final,
 	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
 	dst2_mem_wire : std_logic_vector(31 downto 0);
-SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000011111111111");
+SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
 SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
 
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
@@ -104,7 +104,7 @@ BEGIN
 
 	--Flag Register Part
 		-- 4 Bit Flag Register
-		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map("0000","0000",RF,FlagRegInput);
+		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map("0000","0000",RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
 		FlagRegEnable <= RF or ALU;
 		Flag4BitsReg : generic_WAR_reg GENERIC MAP (REG_WIDTH => 4) port map(FlagRegInput,clk,reset,FlagRegEnable,Flag4BitsOutput);
 		--concatinating the output with 28 bits
@@ -143,8 +143,8 @@ BEGIN
 		--decSpWire
 		decSpWire <= dec_ex or int_ex or call_ex;
 		--updateSp Latch
-		updateSpPlusTwo <= spInputData + 2;
-		updateSpMinusTwo <= spInputData - 2;
+		updateSpPlusTwo <= spInputData + 1;
+		updateSpMinusTwo <= spInputData - 1;
 		--mux41 of assigning the updateSpInput
 		updateSpSel <= decSpWire & incSpWire;
 		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputData,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
