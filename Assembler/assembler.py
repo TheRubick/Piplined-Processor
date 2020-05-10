@@ -43,10 +43,10 @@ def calReg(instruction,oneTwoThreeOp,instructionFunction,errorFlag):
         regField[6:9] = regField[0:3]
         #if the instruction is out
         if(instructionFunction == "0000011"):
-            regField[0:3] = "000"
+            regField[6:9] = "000"
         #if the instruction is in
         elif(instructionFunction == "0001101"):
-            regField[6:9] = "000" 
+            regField[0:3] = "000" 
         #regField[0:3] = "000"
 
     #if the instruction is shl,shr
@@ -57,6 +57,12 @@ def calReg(instruction,oneTwoThreeOp,instructionFunction,errorFlag):
         regField[6:9] = regField[0:3]
         regField[0:3] = "000"
         
+    #if the instruction is swap
+    if(instructionFunction == "0010100"):
+        regField[6:9] = regField[3:6]
+    if(instructionFunction == "1011110"):
+        regField[6:9] = regField[3:6]
+
     immediateValue = ""
     EAValue = ""
     #print(regCount)
