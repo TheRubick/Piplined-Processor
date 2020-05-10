@@ -89,8 +89,10 @@ signal RF,SF,FlagRegEnable,WR_sig,RD_sig,
 signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
 signal Flag_CT,current_address,current_address_final,
 	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
-	dst2_mem_wire,
-	spInputData,spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
+	dst2_mem_wire : std_logic_vector(31 downto 0);
+SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000011111111111");
+SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
+
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
 
 BEGIN

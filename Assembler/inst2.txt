@@ -1,0 +1,19 @@
+.ORG 0
+10
+.ORG 2
+100
+.ORG 10
+inc r1
+nop
+nop
+nop
+nop
+push R1
+nop
+nop
+nop
+nop
+pop R3
+.DATA
+4
+5
