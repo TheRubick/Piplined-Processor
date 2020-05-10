@@ -105,6 +105,7 @@ signal Flag_CT,current_address,current_address_final,
 	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
 	dst2_mem_wire : std_logic_vector(31 downto 0);
 
+SIGNAL current_address_value  : integer := 0;
 SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
 SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
 SIGNAL spInputDataAux,spOutputDataAux,updateSpInputAux : std_logic_vector(31 downto 0);
@@ -139,7 +140,8 @@ BEGIN
 		RD_sig <= RF or mem_rd_ex;
 		WR_sig <= SF or mem_wr_ex;
 		
-		current_address_final <= current_address when to_integer(signed(current_address)) < 1024 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
+		current_address_value <= to_integer(unsigned(current_address));
+		current_address_final <= current_address when current_address_value < 1024 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
 		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address_final,current_data,datamem1);
 		mem_data_to_fetch <= datamem1;
 		
@@ -163,7 +165,7 @@ BEGIN
 		updateSpMinusTwo <= spInputData - 1;
 		--mux41 of assigning the updateSpInput
 		updateSpSel <= decSpWire & incSpWire;
-		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputDataAux,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
+		spUpdateInputMux : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(spOutputData,updateSpPlusTwo,updateSpMinusTwo,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",updateSpSel,updateSpInput);
 		
 		updateSpLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spInputData);
 		--dp1MuxOutputMuxspOutput
