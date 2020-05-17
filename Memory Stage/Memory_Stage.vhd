@@ -14,7 +14,9 @@ ENTITY Memory_stage_entity IS
 		address_dst1_ex,data_dst2_ex,dst1_mem,dst2_mem,pc_ex_mem,input_port  : IN  std_logic_vector(31 DOWNTO 0);
 		reg1_wr_ex_output,reg2_wr_ex_output : OUT std_logic;
 		dst1_add_ex_output,dst2_add_ex_output : OUT std_logic_vector(2 downto 0);
-		dst1_mem_output,dst2_mem_output,out_port_output,mem_data_to_fetch : OUT std_logic_vector(31 DOWNTO 0)
+		dst1_mem_output,dst2_mem_output,out_port_output,mem_data_to_fetch : OUT std_logic_vector(31 DOWNTO 0);
+		flag_from_execute : in std_logic_vector(3 downto 0);
+		flag_to_execute : out std_logic_vector(3 downto 0)
 		);
 END ENTITY Memory_stage_entity;
 
@@ -120,9 +122,10 @@ BEGIN
 
 	--Flag Register Part
 		-- 4 Bit Flag Register
-		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map("0000","0000",RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
+		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,"0000",RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
 		FlagRegEnable <= RF or ALU;
 		Flag4BitsReg : generic_WAR_reg GENERIC MAP (REG_WIDTH => 4) port map(FlagRegInput,clk,reset,FlagRegEnable,Flag4BitsOutput);
+		flag_to_execute <= Flag4BitsOutput;
 		--concatinating the output with 28 bits
 		Flag_CT <= "0000000000000000000000000000" & Flag4BitsOutput;
 		

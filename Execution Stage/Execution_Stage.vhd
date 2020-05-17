@@ -18,7 +18,9 @@ IMM, EA  :  IN std_logic_vector(31 downto 0);
 --flags : OUT std_logic_vector(3 downto 0);
 Predication, Predication_Done, Flush_out :  OUT std_logic; -- BranchPredicator outputs
 DP1_EX, DP2_EX : OUT std_logic;
-PC_EX, ADD_DST1_EX, DATA_DST2_EX : OUT std_logic_vector(31 downto 0)
+PC_EX, ADD_DST1_EX, DATA_DST2_EX : OUT std_logic_vector(31 downto 0);
+flag_from_mem : in std_logic_vector(3 downto 0);
+flag_to_mem : out std_logic_vector(3 downto 0)
 );
 END EX_STAGE ;
 
@@ -109,8 +111,10 @@ signal Flush,PR_Done :std_logic;
 
 begin
 
+flagout <= flag_from_mem;
+flag_to_mem <= flagin;
 ALU_COMP : ALU port map (firstinput, secondinput, ALU_Enable, ALUOUT, IR, flagout, flagin);   -- ALU module
-FlagRegister : generic_RAW_reg generic map (REG_WIDTH => 4) port map (flagin, CLK, RST, ALU_Enable, flagout); -- Flag register
+--FlagRegister : generic_RAW_reg generic map (REG_WIDTH => 4) port map (flagin, CLK, RST, ALU_Enable, flagout); -- Flag register
 
 -- 2 muxes to choose firstinput and secondinput
 Sel_1 <= dp1 & R1;  -- selector INPUT1_Mux
