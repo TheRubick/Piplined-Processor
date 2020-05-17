@@ -6,16 +6,14 @@
 IADD R1,R2,4
 NOP
 NOP
-OR R1,R2,R1
+push r2
+push r2
+push r2
 NOP
 NOP
-AND R2,R1,R3
-NOP
-NOP
-SUB R3,R1,R4
-NOP
-NOP
-pop R1
+pop R5
+pop R4
+pop R3
 .DATA
 4
 5
