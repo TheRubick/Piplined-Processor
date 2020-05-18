@@ -13,15 +13,26 @@ def printText():
         consoleWindow.configure(text=errorString,fg="red")
     
     #print("retrun back")
-def dummy():
-    print("subby dobby")
-    
+def openDialogBox():
+    from tkinter import filedialog
+   
+    root.fileName = filedialog.askopenfilename(filetypes=(("File instruction", ".txt"), ("All files","*.*")))
+
+    print(root.fileName)
+    root.title("Instruction file = "+root.fileName)
+    text1 = open(root.fileName).read()
+    print(text1)
+    textBody.delete("1.0",END)
+    textBody.insert(END,text1)
+        
 root = Tk()
 root.title('assembler')
-b = Button(root,text="generate memory file",command=printText,font="Arial")
-b.pack()
-b2 = Button(root,text="open text file",command=printText,font="Arial")
-b2.pack()
+topFrame = Frame(root)
+topFrame.pack(side=TOP)
+b = Button(topFrame,text="open text file",command=openDialogBox,font="Arial")
+b.pack(side=LEFT)
+b2 = Button(topFrame,text="generate memory file",command=printText,font="Arial")
+b2.pack(side=RIGHT)
 sb = Scrollbar(root)
 sb.pack(side=RIGHT,fill=Y)
 textBody = Text(root,font="Arial",yscrollcommand=sb.set)

@@ -112,7 +112,7 @@ SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("0000000000000000000000
 SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
 SIGNAL spInputDataAux,spOutputDataAux,updateSpInputAux : std_logic_vector(31 downto 0);
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
-
+signal data_mem_flag : std_logic_vector(3 downto 0);
 BEGIN
 
 	--RF signal
@@ -122,7 +122,8 @@ BEGIN
 
 	--Flag Register Part
 		-- 4 Bit Flag Register
-		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,"0000",RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
+		data_mem_flag <= datamem1(3) & datamem1(2) & datamem1(1) & datamem1(0);
+		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,data_mem_flag,RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
 		FlagRegEnable <= RF or ALU;
 		Flag4BitsReg : generic_WAR_reg GENERIC MAP (REG_WIDTH => 4) port map(FlagRegInput,clk,reset,FlagRegEnable,Flag4BitsOutput);
 		flag_to_execute <= Flag4BitsOutput;
