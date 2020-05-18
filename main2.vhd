@@ -359,10 +359,10 @@ architecture main_arch of main is
 begin
 
     --FETCH
-    Jmp_PC_inFetch <="00000000000000000000000000000000";
+    --Jmp_PC_inFetch <="00000000000000000000000000000000";
     fetchStage: Fetch port map(clk,reset_sg,interrupt_sg,STALL_Dout,RET_EX_OUT, RTI_EX_OUT,
     CALL_EX_OUT,Predication,Flush_out, Predication_Done,
-    Jmp_PC_inFetch,mem_data_to_fetch,PC_IF_EX_out_ID_EX,
+    JMP_PC_Dout,mem_data_to_fetch,PC_IF_EX_out_ID_EX,
     RTI_Buff_fromFetch, RET_Buff_fromFetch,
     CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch,
     INT_module_out_fromFetch,reset_module_out_fromFetch,IR_Buff_fromFetch,PPC_fromFetch,
