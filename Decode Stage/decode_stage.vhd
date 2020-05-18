@@ -230,8 +230,8 @@ architecture  decode_stage_arch of decode_stage is
     DP2_out <= DP2;
     LOADCASE_out <= LOADCASE;
     mux4_select <= exec_mem & one_or_two;
-    and1_out <= (not C1) and stall_signal;
-    and2_out <= (not C2) and stall_signal;
+    and1_out <= C1 and stall_signal;
+    and2_out <= C2 and stall_signal;
     alu_enable <= alu_enable_signal;
     jump_reg_data <= jump_reg_data_signal;
 
