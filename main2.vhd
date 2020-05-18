@@ -15,18 +15,20 @@ end main;
 
 architecture main_arch of main is
 
-    component Fetch is
-        port (
-          clk,reset_sg,interrupt_sg:in std_logic;
-          stall,RET_Ex_MEM, RTI_Ex_MEM,CALL_Ex_Mem,Predict,flush, Prediction_Done: in std_logic;
-          Jmp_PC, Mem_data, PC_ID_EX: in std_logic_vector (31 downto 0);
-          RTI_Buff, RET_Buff, CALL_Buff,RET_module_out, RTI_module_out, CALL_module_out, INT_module_out, reset_module_out: out std_logic;
-          IR_Buff: out std_logic_vector (15 downto 0);
-          PPC: out std_logic_vector (31 downto 0);
-          jump_reg_add: out std_logic_vector (2 downto 0);
-          Jmp_Int_PC: out std_logic_vector (31 downto 0)
-        ) ;
-      end component;
+  component Fetch is
+    port (
+      clk,reset_sg,interrupt_sg:in std_logic;
+      stall,RET_Ex_MEM, RTI_Ex_MEM,CALL_Ex_Mem,Predict,flush, Prediction_Done: in std_logic;
+      Jmp_PC, Mem_data, PC_ID_EX: in std_logic_vector (31 downto 0);
+      RTI_Buff, RET_Buff, CALL_Buff,RET_module_out, RTI_module_out, CALL_module_out, INT_module_out, reset_module_out: out std_logic;
+      IR_Buff: out std_logic_vector (15 downto 0);
+      PPC: out std_logic_vector (31 downto 0);
+      jump_reg_add: out std_logic_vector (2 downto 0);
+      Jmp_Int_PC: out std_logic_vector (31 downto 0);
+      DHR1, DHR2, DHR3: in std_logic_vector (11 downto 0);
+      one_two_out, exe_mem_out, dp_out: out std_logic
+    ) ;
+  end component;
 
       component IF_IR_Buffer is
         port (
@@ -236,6 +238,9 @@ architecture main_arch of main is
     signal PPC_fromFetch: std_logic_vector (31 downto 0);
     signal jump_reg_add_fromFetch: std_logic_vector (2 downto 0);
     signal Jmp_Int_PC_fromFetch: std_logic_vector (31 downto 0);
+    --
+    signal DHR1_decode, DHR2_decode, DHR3_decode: std_logic_vector (11 downto 0);
+    signal one_two_out_fetch, exe_mem_out_fetch, dp_out_fetch: std_logic;
 
     -- if buffer outputs
     signal two_ints, CALL, RET, RTI, INT: std_logic;
@@ -342,7 +347,9 @@ begin
     RTI_Buff_fromFetch, RET_Buff_fromFetch,
     CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch,
     INT_module_out_fromFetch,reset_module_out_fromFetch,IR_Buff_fromFetch,PPC_fromFetch,
-    jump_reg_add_fromFetch,Jmp_Int_PC_fromFetch);
+    jump_reg_add_fromFetch,Jmp_Int_PC_fromFetch,
+    DHR1_decode, DHR2_decode, DHR3_decode,
+    one_two_out_fetch, exe_mem_out_fetch, dp_out_fetch);
 
     --FETCH buffer
     if_id_buffer: IF_IR_Buffer port map(clk,RTI_Buff_fromFetch, RET_Buff_fromFetch, CALL_Buff_fromFetch,
