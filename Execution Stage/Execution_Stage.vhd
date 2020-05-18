@@ -121,8 +121,8 @@ Sel_1 <= dp1 & R1;  -- selector INPUT1_Mux
 Sel_2 <= dp2 & R2;  -- selector INPUT2_Temp_Mux
 Sel <= IR(12) AND IR(11); -- selector INPUT2_Mux
 
-INPUT1_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT1, OUT1, Dst1_EX, Dst1_MEM, Sel_1 ,firstinput);
-INPUT2_Temp_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT2, OUT2, Dst2_EX, Dst2_MEM, Sel_2 ,secondinput_temp);
+INPUT1_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT1, OUT1, Dst1_EX, Dst2_MEM, Sel_1 ,firstinput);
+INPUT2_Temp_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT2, OUT2, Dst2_EX, Dst1_MEM, Sel_2 ,secondinput_temp);
 INPUT2_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (secondinput_temp, IMM, Sel, secondinput);
 
 
