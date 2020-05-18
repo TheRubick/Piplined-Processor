@@ -1,38 +1,30 @@
-Library ieee;
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use IEEE.std_logic_unsigned.all;
 
-ENTITY TEST IS
-PORT(
+entity variable_ex is
+  port (
+    i_clk   : in std_logic;
+    o_done  : out std_logic
+    );
+end variable_ex;
 
- CLK , Write_enable     :  IN std_logic;
- Address_Read : IN  std_logic_vector(31 DOWNTO 0);
- data_write  : IN  std_logic_vector(31 DOWNTO 0);
- data_read : OUT std_logic_vector(31 DOWNTO 0)
-);
-END TEST ;
-
-architecture a_TEST of TEST is
-  component dataMemory IS
-  	PORT(
-  		clk : IN std_logic;
-  		we  : IN std_logic;
-  		address : IN  std_logic_vector(31 DOWNTO 0);
-  		datain  : IN  std_logic_vector(31 DOWNTO 0);
-  		dataout : OUT std_logic_vector(31 DOWNTO 0));
-  END component dataMemory;
-
-
-
-
-
-  signal result : std_logic_vector(3 downto 0);
-  signal sel1 : std_logic_vector(1 downto 0);
+architecture rtl of variable_ex is
 
 
 begin
 
-RAM : dataMemory port map (CLK , Write_enable , Address_Read , data_write , data_read);
+  EX_VAR : process (i_clk)
+    variable Temp : std_logic := '0';
+  begin
+    if falling_edge(i_clk) then
 
-end a_TEST;
+      Temp := not(Temp);
+      o_done <= Temp;
+
+    end if;
+  end process EX_VAR;
+
+
+
+end rtl;
