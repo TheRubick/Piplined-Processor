@@ -62,7 +62,11 @@ architecture main_arch of main is
           dst2_data: in std_logic_vector (31 downto 0);
           dst1_write_enable: in std_logic;
           dst2_write_enable: in std_logic;
-
+          dst_exec1: in std_logic_vector (31 downto 0);
+          dst_exec2: in std_logic_vector (31 downto 0);
+          exec_mem: in std_logic;
+          one_or_two: in std_logic;
+          DP: in std_logic;
 
           call_out:out std_logic;
           RET_out:out std_logic;
@@ -92,7 +96,19 @@ architecture main_arch of main is
           out1_data: out std_logic_vector (31 downto 0);
           out2_data: out std_logic_vector (31 downto 0);
           dst1_add_out:out std_logic_vector(2 downto 0);
-          dst2_add_out:out std_logic_vector(2 downto 0)
+          dst2_add_out:out std_logic_vector(2 downto 0);
+
+          DHR1_decode_out: out std_logic_vector (11 downto 0);
+          DHR2_decode_out: out std_logic_vector (11 downto 0);
+          DHR3_decode_out: out std_logic_vector (11 downto 0);
+          R1_out:out std_logic;
+          R2_out:out std_logic;
+          C1_out:out std_logic;
+          C2_out:out std_logic;
+          DP1_out:out std_logic;
+          DP2_out:out std_logic;
+          LOADCASE_out:out std_logic;
+          JMP_PC: out std_logic_vector (31 downto 0)
 
         );
       end component;
@@ -280,6 +296,9 @@ architecture main_arch of main is
     signal out2_data_Dout:  std_logic_vector (31 downto 0);
     signal dst1_add_out_Dout: std_logic_vector(2 downto 0);
     signal dst2_add_out_Dout: std_logic_vector(2 downto 0);
+    signal DHR1_Dout, DHR2_Dout, DHR3_Dout: std_logic_vector (11 downto 0);
+    signal R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout: std_logic;
+    signal JMP_PC_Dout: std_logic_vector (31 downto 0);
 
     -- ID_EX_Buffer signasl
     signal TEMP_OUT_SG: std_logic_vector (4 downto 0);
@@ -361,11 +380,13 @@ begin
     --DECODE
 
     Decode: decode_stage port map(clk,reset_module_out_fromFetch,Flush_out,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
-        jump_reg_add_fromFetch,dst1_add_wb_out,dst2_add_wb_out,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,call_Dout,RET_Dout,PC_IF_EX_Dout,
+        jump_reg_add_fromFetch,dst1_add_wb_out,dst2_add_wb_out,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,
+        ADD_DST1_EX, DATA_DST2_EX, exe_mem_out_fetch, one_two_out_fetch, dp_out_fetch,call_Dout,RET_Dout,PC_IF_EX_Dout,
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
-        out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout
+        out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout, DHR1_Dout, DHR2_Dout, DHR3_Dout, R1_Dout, R2_Dout, C1_Dout, C1_Dout,
+        DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout
     );
 
     TEMP_OUT_SG <= IR_out_Dout(13 downto 9);
