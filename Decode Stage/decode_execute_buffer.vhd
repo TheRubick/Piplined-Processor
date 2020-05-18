@@ -31,6 +31,13 @@ port (
   JZ: in std_logic;
   JMP: in std_logic;
   STALL: in std_logic;
+  R1:in std_logic;
+  R2:in std_logic;
+  C1:in std_logic;
+  C2:in std_logic;
+  DP1:in std_logic;
+  DP2:in std_logic;
+  LOADCASE:in std_logic;
 
   IR_out: out std_logic_vector (15 downto 0);
   RET_out: out std_logic;
@@ -57,7 +64,14 @@ port (
   ALU_ENABLE_out: out std_logic;
   JZ_out: out std_logic;
   JMP_out: out std_logic;
-  STALL_out: out std_logic
+  STALL_out: out std_logic;
+  R1_out:out std_logic;
+  R2_out:out std_logic;
+  C1_out:out std_logic;
+  C2_out:out std_logic;
+  DP1_out:out std_logic;
+  DP2_out:out std_logic;
+  LOADCASE_out:out std_logic
 );
 end decode_execute_buffer;
 
@@ -120,5 +134,13 @@ architecture  decode_execute_buffer_arch of decode_execute_buffer is
     JMP_BUFFER:WAR_latch PORT MAP (JMP, CLK, RESET, not_STALL_reg_out, JMP_out);
     decreament_sp_BUFFER:WAR_latch PORT MAP (decreament_sp, CLK, RESET, not_STALL_reg_out, decreament_sp_out);
     increament_sp_BUFFER:WAR_latch PORT MAP (increament_sp, CLK, RESET, not_STALL_reg_out, increament_sp_out);
+
+    r1_BUFFER:WAR_latch PORT MAP (R1, CLK, RESET, not_STALL_reg_out, R1_out);
+    r2_BUFFER:WAR_latch PORT MAP (R2, CLK, RESET, not_STALL_reg_out, R2_out);
+    c1_BUFFER:WAR_latch PORT MAP (C1, CLK, RESET, not_STALL_reg_out, C1_out);
+    c2_BUFFER:WAR_latch PORT MAP (C2, CLK, RESET, not_STALL_reg_out, C2_out);
+    dp1_BUFFER:WAR_latch PORT MAP (DP1, CLK, RESET, not_STALL_reg_out, DP1_out);
+    dp2_BUFFER:WAR_latch PORT MAP (DP2, CLK, RESET, not_STALL_reg_out, DP2_out);
+    loadcase_BUFFER:WAR_latch PORT MAP (LOADCASE, CLK, RESET, not_STALL_reg_out, LOADCASE_out);
 
 end decode_execute_buffer_arch;
