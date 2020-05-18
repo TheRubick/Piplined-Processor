@@ -246,7 +246,7 @@ architecture main_arch of main is
 
 
     -- fetch missing signals
-    signal Jmp_PC_inFetch, mem_data_to_fetch: std_logic_vector (31 downto 0);
+    signal mem_data_to_fetch: std_logic_vector (31 downto 0);
     signal RTI_Buff_fromFetch, RET_Buff_fromFetch, CALL_Buff_fromFetch,RET_module_out_fromFetch: std_logic;
     signal RTI_module_out_fromFetch, CALL_module_out_fromFetch, INT_module_out_fromFetch: std_logic;
     signal reset_module_out_fromFetch: std_logic;
