@@ -22,9 +22,24 @@ architecture DHR_arch of DHR is
             clear: in std_logic;
             enable: in std_logic;
             q: out std_logic_vector (REG_WIDTH - 1 downto 0)
-        
+
         );
     end component;
+
+    component generic_DHR_reg is
+    GENERIC(
+       REG_WIDTH : INTEGER := 16);
+      port (
+        d: in std_logic_vector (REG_WIDTH - 1 downto 0);
+        clk: in std_logic;
+        clear: in std_logic;
+    enable: in std_logic;
+        q: out std_logic_vector (REG_WIDTH - 1 downto 0);
+        flag : out std_logic
+
+      ) ;
+     end component;
+
     component mux2_generic is
         GENERIC(
            INPUT_WIDTH : INTEGER := 1);
@@ -34,7 +49,7 @@ architecture DHR_arch of DHR is
             mux_out: out std_logic_vector (INPUT_WIDTH - 1 downto 0)
             );
     end component;
-    
+
     signal if_1, mem_part, mux_selector, main_and: std_logic;
     signal reg1_rst,reg2_rst,reg3_rst, reg2_en, reg1_0: std_logic;
     signal mux_out, zero_one, one_zero, zero_zero: std_logic_vector (1 downto 0);
@@ -51,7 +66,7 @@ begin
     mem_part <= '1' when IR11 = '0' and IR12 = '0' and mem = '1' else
                 '1' when IR11 = '0' and IR12 = '1' and mem = '1' else
                 '0';
-    
+
     main_and <= if_1 or mem_part or two_op;
     reg1_0 <= (not flush) and main_and;
     --reg1_rst <= ((not reg1_0) or reset);
@@ -71,10 +86,10 @@ begin
     reg2_rst <= reset;
     reg2_en <= not stall;
     reg2_in <= ( reg1_out (11 downto 10) & zero_one & reg1_out(7 downto 0));
-    DHR2: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out);
+    DHR2: generic_DHR_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out,stall_enable);
     DHR2_out <= reg2_out;
 
-    stall_enable <= '1' when reg2_in = reg2_out else '0';
+    --stall_enable <= '1' when reg2_in = reg2_out else '0';
 
     -- 3rd register
     --reg3_rst <= ((not reg2_out(0)) or stall) or reset;

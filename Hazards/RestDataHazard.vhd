@@ -5,9 +5,8 @@ use IEEE.std_logic_unsigned.all;
 
 ENTITY RestDataHazard IS
 PORT(
-clk : IN std_logic;
-Enable, Reset, Two_Operand : IN std_logic;
---IR : IN std_logic_vector(15 downto 0);
+--clk : IN std_logic;
+stall_enable ,Enable, Reset, Two_Operand : IN std_logic;
 DHR2, DHR3 :IN std_logic_vector (11 downto 0);
 SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
 DP1, DP2, C1, C2, R1, R2, LOADCASE : OUT std_logic
@@ -89,17 +88,21 @@ RC3_OR_RC2_Mux_S2 : mux2_generic generic map (INPUT_WIDTH => 4) port map (DHR3(1
 C2 <= RC_SEL_TEMP2(1) AND Not(clear2);
 R2 <= RC_SEL_TEMP2(3) AND Not(clear2);
 
+--
+-- EX_VAR : process (clk)
+--   variable Temp : std_logic := '0';
+-- begin
+--   if falling_edge(clk) AND clk = '0' then
+--
+--     Temp := ( (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1))) ;
+--     report "Temp value is" & std_logic'image(Temp);
+--     LOADCASE <= Temp;
+--
+--   end if;
+-- end process EX_VAR;
 
-EX_VAR : process (clk)
-  variable Temp : std_logic := '0';
-begin
-  if falling_edge(clk) then
 
-    Temp := ( (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1))) ;
-    LOADCASE <= Temp;
-
-  end if;
-end process EX_VAR;
+LOADCASE <= ( (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1))) AND stall_enable;
 
 
 end a_RestDataHazard;

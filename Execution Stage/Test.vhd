@@ -19,12 +19,14 @@ begin
   begin
     if falling_edge(i_clk) then
 
-      Temp := not(Temp);
+      Temp := '1';
+      o_done <= Temp;
+    elsif rising_edge(i_clk) then
+      Temp := '0';
       o_done <= Temp;
 
     end if;
   end process EX_VAR;
-
 
 
 end rtl;
