@@ -122,7 +122,8 @@ BEGIN
 
 	--Flag Register Part
 		-- 4 Bit Flag Register
-		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,"0000",RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
+		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,datamem1(3) & datamem1(2) & datamem1(1) & datamem1(0)
+		,RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
 		FlagRegEnable <= RF or ALU;
 		Flag4BitsReg : generic_WAR_reg GENERIC MAP (REG_WIDTH => 4) port map(FlagRegInput,clk,reset,FlagRegEnable,Flag4BitsOutput);
 		flag_to_execute <= Flag4BitsOutput;
