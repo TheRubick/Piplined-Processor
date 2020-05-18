@@ -48,7 +48,9 @@ begin
 
 
     if_1 <= (IR11 or IR12) and one_op;
-    mem_part <= (not (IR11 xor IR12) ) and mem;
+    mem_part <= '1' when IR11 = '0' and IR12 = '0' and mem = '1' else
+                '1' when IR11 = '0' and IR12 = '1' and mem = '1' else
+                '0';
     
     main_and <= if_1 or mem_part or two_op;
     reg1_0 <= (not flush) and main_and;
