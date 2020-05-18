@@ -255,7 +255,7 @@ architecture main_arch of main is
     signal jump_reg_add_fromFetch: std_logic_vector (2 downto 0);
     signal Jmp_Int_PC_fromFetch: std_logic_vector (31 downto 0);
     --
-    signal DHR1_decode, DHR2_decode, DHR3_decode: std_logic_vector (11 downto 0);
+    --signal DHR1_decode, DHR2_decode, DHR3_decode: std_logic_vector (11 downto 0);
     signal one_two_out_fetch, exe_mem_out_fetch, dp_out_fetch: std_logic;
 
     -- if buffer outputs
@@ -367,7 +367,7 @@ begin
     CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch,
     INT_module_out_fromFetch,reset_module_out_fromFetch,IR_Buff_fromFetch,PPC_fromFetch,
     jump_reg_add_fromFetch,Jmp_Int_PC_fromFetch,
-    DHR1_decode, DHR2_decode, DHR3_decode,
+    DHR1_Dout, DHR2_Dout, DHR3_Dout,
     one_two_out_fetch, exe_mem_out_fetch, dp_out_fetch);
 
     --FETCH buffer
