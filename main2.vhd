@@ -385,7 +385,7 @@ begin
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
-        out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout, DHR1_Dout, DHR2_Dout, DHR3_Dout, R1_Dout, R2_Dout, C1_Dout, C1_Dout,
+        out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout, DHR1_Dout, DHR2_Dout, DHR3_Dout, R1_Dout, R2_Dout, C1_Dout, C2_Dout,
         DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout
     );
 
@@ -422,14 +422,15 @@ begin
             );
 
   -- connect Execute Stage
+    signal R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout: std_logic;
   execute_component : EX_STAGE port map(clk, reset_module_out_fromFetch, IR_out_ID_EX, INT_out_ID_EX,
-  JZ_out_ID_EX, '0', '0', '0', '0', '0', '0', '0', STALL_out_ID_EX, OUT1_out_ID_EX,
+  JZ_out_ID_EX, LOADCASE_Dout, DP1_Dout, C1_Dout,R1_Dout,  DP2_Dout, C2_Dout, R2_Dout, STALL_out_ID_EX, OUT1_out_ID_EX,
   OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
   Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,
   Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX,flag_in,flag_out);
 
   -- Execute Memory Buffer
-  EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, '0',
+  EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, STALL_out_ID_EX,
                             PC_EX, ADD_DST1_EX, DATA_DST2_EX,
                             PC_OUT, ADD_DST1_OUT, DATA_DST2_OUT,
                             REG1_WR_out_ID_EX, REG2_WR_out_ID_EX,MEMORY_WRITE_out_ID_EX,MEMEORY_READ_out_ID_EX ,
