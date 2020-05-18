@@ -5,11 +5,11 @@ use IEEE.std_logic_unsigned.all;
 
 ENTITY RestDataHazard IS
 PORT(
-clk : IN std_logic;
+--clk : IN std_logic;
 Enable, Reset, Two_Operand : IN std_logic;
 --IR : IN std_logic_vector(15 downto 0);
 DHR2, DHR3 :IN std_logic_vector (11 downto 0);
-SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0); 
+SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
 DP1, DP2, C1, C2, R1, R2, LOADCASE : OUT std_logic
 );
 END RestDataHazard ;
@@ -90,8 +90,7 @@ C2 <= RC_SEL_TEMP2(1) AND Not(clear2);
 R2 <= RC_SEL_TEMP2(3) AND Not(clear2);
 
 
-LOADCASE <= (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1)) When clk = '0' Else
-            '0';
+LOADCASE <= (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1)) ;
 
 end a_RestDataHazard;
 
