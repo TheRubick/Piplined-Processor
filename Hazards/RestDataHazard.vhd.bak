@@ -45,13 +45,13 @@ signal RC_SEL_TEMP1, RC_SEL_TEMP2 : std_logic_vector(3 downto 0);
 begin
 
 clear1 <= (Not(Enable) OR Reset) AND (Not(stall_enable)) ;
-clear2 <= (Not(Enable) OR Reset OR Not(Two_Operand)) AND (Not(stall_enable)) ;
+clear2 <= Not(Enable) OR Reset OR Not(Two_Operand) AND (Not(stall_enable)) ;
 
 
 -- for DHR2 and SrcReg1
 DHR2_Result1_S1 <= ( DHR2(2) XNOR SrcReg1(0) ) AND  ( DHR2(3) XNOR SrcReg1(1) ) AND ( DHR2(4) XNOR SrcReg1(2) ) AND DHR2(0);
 DHR2_Result2_S1 <= ( DHR2(5) XNOR SrcReg1(0) ) AND  ( DHR2(6) XNOR SrcReg1(1) ) AND ( DHR2(7) XNOR SrcReg1(2) ) AND (DHR2(0) AND DHR2(1)) ;
-DP2_S1 <= (DHR2_Result1_S1 OR DHR2_Result2_S1)  AND stall_enable;
+DP2_S1 <= DHR2_Result1_S1 OR DHR2_Result2_S1;
 
 -- for DHR3 and SrcReg1
 DHR3_Result1_S1 <= ( DHR3(2) XNOR SrcReg1(0) ) AND  ( DHR3(3) XNOR SrcReg1(1) ) AND ( DHR3(4) XNOR SrcReg1(2) ) AND DHR3(0);
@@ -71,14 +71,14 @@ R1 <= RC_SEL_TEMP1(3) AND Not(clear1);
 
 DHR2_Result1_S2 <= ( DHR2(2) XNOR SrcReg2(0) ) AND  ( DHR2(3) XNOR SrcReg2(1) ) AND ( DHR2(4) XNOR SrcReg2(2) ) AND DHR2(0);
 DHR2_Result2_S2 <= ( DHR2(5) XNOR SrcReg2(0) ) AND  ( DHR2(6) XNOR SrcReg2(1) ) AND ( DHR2(7) XNOR SrcReg2(2) ) AND (DHR2(0) AND DHR2(1)) ;
-DP2_S2 <= (DHR2_Result1_S2 OR DHR2_Result2_S2) AND stall_enable;
+DP2_S2 <= DHR2_Result1_S2 OR DHR2_Result2_S2;
 
 
 -- for DHR3 and SrcReg2
 
 DHR3_Result1_S2 <= ( DHR3(2) XNOR SrcReg2(0) ) AND  ( DHR3(3) XNOR SrcReg2(1) ) AND ( DHR3(4) XNOR SrcReg2(2) ) AND DHR3(0);
 DHR3_Result2_S2 <= ( DHR3(5) XNOR SrcReg2(0) ) AND  ( DHR3(6) XNOR SrcReg2(1) ) AND ( DHR3(7) XNOR SrcReg2(2) ) AND (DHR3(0) AND DHR3(1)) ;
-DP3_S2 <= DHR3_Result1_S2 OR DHR3_Result2_S2 ;
+DP3_S2 <= DHR3_Result1_S2 OR DHR3_Result2_S2;
 
 -- select DP2
 DP2 <= (DP2_S2 OR DP3_S2) AND Not(clear2);  -- here we out Right DP2
