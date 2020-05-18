@@ -6,8 +6,8 @@ entity DHR is
   port (
     clk,reset, flush, stall, one_op, two_op, mem, IR11, IR12, reg2_wr: in std_logic;
     IR_20,I: in std_logic_vector(2 downto 0);
-    DHR1_out,DHR2_out,DHR3_out: out std_logic_vector (11 downto 0)
-
+    DHR1_out,DHR2_out,DHR3_out: out std_logic_vector (11 downto 0);
+    stall_enable: out std_logic
   ) ;
 end DHR;
 
@@ -73,6 +73,8 @@ begin
     reg2_in <= ( reg1_out (11 downto 10) & zero_one & reg1_out(7 downto 0));
     DHR2: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out);
     DHR2_out <= reg2_out;
+
+    stall_enable <= reg2_in xnor reg2_out;
 
     -- 3rd register
     --reg3_rst <= ((not reg2_out(0)) or stall) or reset;

@@ -140,8 +140,8 @@ architecture  decode_stage_arch of decode_stage is
         port (
           clk,reset, flush, stall, one_op, two_op, mem, IR11, IR12, reg2_wr: in std_logic;
           IR_20,I: in std_logic_vector(2 downto 0);
-          DHR1_out,DHR2_out,DHR3_out: out std_logic_vector (11 downto 0)
-
+          DHR1_out,DHR2_out,DHR3_out: out std_logic_vector (11 downto 0);
+          stall_enable: out std_logic
         ) ;
       end component;
 
@@ -205,6 +205,7 @@ architecture  decode_stage_arch of decode_stage is
     signal alu_enable_signal: std_logic;
     signal jump_reg_data_signal: std_logic_vector (31 downto 0);
 
+    signal stall_enable_sg: std_logic;
     BEGIN
 
     IR_out <= IR_out_signal;
@@ -250,7 +251,7 @@ architecture  decode_stage_arch of decode_stage is
                                           decreament_sp, increament_sp, one_operand, two_operand, memory, reg_write2_signal);
 
     dhr_regs:DHR PORT MAP (clk, reset, flush, stall_signal, one_operand, two_operand, memory, IR_out_signal(11)
-                  , IR_out_signal(12), reg_write2_signal, IR_2_0, mux2_out, DHR1, DHR2, DHR3);
+                  , IR_out_signal(12), reg_write2_signal, IR_2_0, mux2_out, DHR1, DHR2, DHR3,stall_enable_sg);
 
     data_hazard1:RestDataHazard PORT MAP ('1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE);
 
