@@ -12,7 +12,9 @@ entity Fetch is
     IR_Buff: out std_logic_vector (15 downto 0);
     PPC: out std_logic_vector (31 downto 0);
     jump_reg_add: out std_logic_vector (2 downto 0);
-    Jmp_Int_PC: out std_logic_vector (31 downto 0)
+    Jmp_Int_PC: out std_logic_vector (31 downto 0);
+    DHR1, DHR2, DHR3: in std_logic_vector (11 downto 0);
+    one_two_out, exe_mem_out, dp_out: out std_logic
   ) ;
 end Fetch;
 
@@ -99,19 +101,41 @@ architecture Fetch_arch of Fetch is
         one_stall_int: out std_logic
       ) ;
     end component;
+
+    component is_jmp is
+      port (
+      not_stall : in std_logic;
+        IR : in std_logic_vector(15 downto 0);
+      RTI,RET,CALL,JMP,JZ : out std_logic;
+      Src_Reg_out : out std_logic_vector(2 downto 0)
+      ) ;
+    end component;
+
+    component JmpDataHazard IS
+    PORT(
+    DHR1 , DHR2, DHR3 :IN std_logic_vector (11 downto 0);
+    Enable , Reset : IN std_logic;
+    SrcReg : IN std_logic_vector (2 downto 0);
+    DP, F_1_2, EXE_MEM : OUT std_logic;
+    Cycles : OUT std_logic_vector (1 downto 0)
+    );
+    END component ;
     
 
    -- interrrupt temp signals 
     signal reset,reset1,INT,INT2,INT3,INTZF,IntZ_notF,Jmpz2,one_stall_int:  std_logic;
     signal ISR_PC: std_logic_vector (31 downto 0);
     --is jump signals 
-    signal JMP,JMPZ,CALL,RET,RTI: std_logic;
+    signal JMP,JMPZ,CALL,RET,RTI, isJumpEnable: std_logic;
+    signal src_reg: std_logic_vector (2 downto 0);
     -- jmp data hazard signals
-    signal dp,one_over_2,exe_mem,c1,c2: std_logic;
+    signal dp,one_over_2,exe_mem,c1,c2, JmpDataHazard_en: std_logic;
+    signal cycles: std_logic_vector (1 downto 0);
     --internal signals
     signal Jmp_Ready,CALL_out,RET_out,RTI_out,IR_MUX_Selector: std_logic;
     signal ret_Latch_input,rti_latch_input,call_latch_input,mux2_selector: std_logic;
     signal others_pc_mux_selector,PC_reg_enable,PPC_Mux3_selector: std_logic;
+
     
 
     signal big_mux_1_selector,big_mux_2_selector,PCMux_selector: std_logic_vector(1 downto 0);
@@ -121,6 +145,9 @@ architecture Fetch_arch of Fetch is
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
 
 begin
+
+  --
+
 
   -- interrupt 
   interrupt_module: Interrupt port map(clk,interrupt_sg,reset_sg,JMP,RET,RTI,JMPZ,IR,RTI_Ex_MEM,RET_Ex_MEM,
@@ -139,17 +166,25 @@ begin
     --ISR_PC <= (others =>'0');
     --one_stall_int <= '0';
     --is Jump
-    JMP <= '0';
-    JMPZ <= '0';
-    CALL <= '0';
-    RET <= '0';
-    RTI <= '0';
+    isJumpEnable <= (not (stall or INT2 or INT3 or flush or one_stall_int));
+    isJump: is_jmp port map(isJumpEnable,IR,RTI,RET,CALL,JMP,JMPZ,src_reg);
+    --JMP <= '0';
+    --JMPZ <= '0';
+    --CALL <= '0';
+    --RET <= '0';
+    --RTI <= '0';
     --jump data hazard
-    dp <= '0';
-    one_over_2 <= '0';
-    exe_mem <= '0';
-    c1 <= '0';
-    c2 <= '0';
+    JmpDataHazard_en <= stall nor flush;
+    jmpDataHazard_circuit: JmpDataHazard port map(DHR1, DHR2, DHR3, JmpDataHazard_en, reset,src_reg,
+    dp,one_over_2,exe_mem,cycles);
+    one_two_out <= one_over_2;
+    exe_mem_out <= exe_mem; 
+    dp_out <= dp;
+    --dp <= '0';
+    --one_over_2 <= '0';
+    --exe_mem <= '0';
+    c1 <= cycles(0);
+    c2 <= cycles(0);
     -- 
     --jmp ready
     Jmp_Ready <= (( (c1 or c2) and dp ) or stall );
