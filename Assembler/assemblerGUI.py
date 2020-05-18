@@ -18,14 +18,8 @@ def openDialogBox():
    
     root.fileName = filedialog.askopenfilename(filetypes=(("File instruction", ".txt"), ("All files","*.*")))
 
-    print(root.fileName)         # prints filename
-                                            # onto terminal
-    root.title("Instruction file = "+root.fileName)  # put filename into
-                                            # title bar
-
-    #read the contents of the file
-    # into the variable:  text
-    # print it onto the screen for shits and giggles
+    print(root.fileName)
+    root.title("Instruction file = "+root.fileName)
     text1 = open(root.fileName).read()
     print(text1)
     textBody.delete("1.0",END)
