@@ -128,6 +128,7 @@ architecture  decode_stage_arch of decode_stage is
 
       component RestDataHazard IS
       PORT(
+      clk : IN std_logic;
       Enable, Reset, Two_Operand : IN std_logic;
       DHR2, DHR3 :IN std_logic_vector (11 downto 0);
       SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
@@ -251,7 +252,7 @@ architecture  decode_stage_arch of decode_stage is
     dhr_regs:DHR PORT MAP (clk, reset, flush, stall_signal, one_operand, two_operand, memory, IR_out_signal(11)
                   , IR_out_signal(12), reg_write2_signal, IR_2_0, mux2_out, DHR1, DHR2, DHR3);
 
-    data_hazard1:RestDataHazard PORT MAP ('1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE);
+    data_hazard1:RestDataHazard PORT MAP (clk,'1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE);
 
 
 end decode_stage_arch;
