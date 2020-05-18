@@ -41,10 +41,22 @@ q: out std_logic
 ) ;
 end component;
 
+component mux2_1bit is
+    port (
+      in1,in2: in std_logic;
+  sel: in std_logic;
+      mux_out: out std_logic
+      );
+  end component mux2_1bit ;
+
     signal reset: std_logic;
+    signal stall_input,stall_output: std_logic; 
 
 begin
-reset <= RST or Stall;
+    
+Stall_mux: mux2_1bit port map(Stall,'0',stall_output,stall_input);
+Stall_Latch : WAR_latch port map(stall_input, CLK, '0','1', stall_output);
+reset <= RST or stall_output;
 
 -- registers 32 bit
 ADD_DST1 : generic_WAR_reg generic map (REG_WIDTH => 32) port map (ADD_DST1_IN, CLK, RST, '1', ADD_DST1_OUT); -- ADD_DST1  register
