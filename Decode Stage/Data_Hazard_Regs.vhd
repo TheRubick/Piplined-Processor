@@ -52,8 +52,8 @@ begin
     
     main_and <= if_1 or mem_part or two_op;
     reg1_0 <= (not flush) and main_and;
-    reg1_rst <= ((not reg1_0) or reset);
-    
+    --reg1_rst <= ((not reg1_0) or reset);
+    reg1_rst <= (reset);
     -- MUX part
     mux_selector <= ( (IR11 and IR12) and one_op) or mem_part;
 
@@ -65,14 +65,16 @@ begin
     DHR1_out <= reg1_out;
 
     -- 2nd regsiter
-    reg2_rst <= (not reg1_out(0)) or reset;
+    --reg2_rst <= (not reg1_out(0)) or reset;
+    reg2_rst <= reset;
     reg2_en <= not stall;
     reg2_in <= ( reg1_out (11 downto 10) & zero_one & reg1_out(7 downto 0));
     DHR2: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out);
     DHR2_out <= reg2_out;
 
     -- 3rd register
-    reg3_rst <= ((not reg2_out(0)) or stall) or reset;
+    --reg3_rst <= ((not reg2_out(0)) or stall) or reset;
+    reg3_rst <=  stall or reset;
     reg3_in <= ( one_zero & one_zero & reg2_out( 7 downto 0));
     DHR3: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg3_in ,clk,reg3_rst,'1',reg3_out);
     DHR3_out <= reg3_out;
