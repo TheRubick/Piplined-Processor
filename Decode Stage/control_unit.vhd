@@ -27,7 +27,11 @@ port(
   EA: out std_logic_vector (31 downto 0);
   IMM: out std_logic_vector (31 downto 0);
   decreament_sp: out std_logic;
-  increament_sp: out std_logic
+  increament_sp: out std_logic;
+  one_operand_out: out std_logic;
+  two_operand_out: out std_logic;
+  memory_out: out std_logic;
+  reg_write2_out: out std_logic
 );
 end control_unit;
 
@@ -138,7 +142,10 @@ BEGIN
     memory <= decoderOut(2);
     mem_out <= memory;
     branch <= decoderOut(3);
-
+    one_operand_out<= one_operand;
+    memory_out<= memory;
+    reg_write2_out<= reg_write2_signal;
+    two_operand_out <= two_operand;
 
     reset_flush <= reset OR flush;
     reg_write1_signal <= (not reset_flush) AND (((IR(11) OR IR(12)) AND one_operand) OR two_operand OR (memory AND (not IR(11))));
