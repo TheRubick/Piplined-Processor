@@ -1,0 +1,9 @@
+.ORG 0
+10
+.ORG 2
+100
+.ORG 10
+inc R1
+.DATA
+4
+5

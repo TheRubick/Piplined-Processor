@@ -117,20 +117,47 @@ def checkOnAdditiveText(instructionFunction,instruction):
     print(numOfCommas)
     if(instructionFunction == "0000000" and len(instruction.split()) != 1):
         errorFlag = True
-    elif(instructionFunction == "0000100" and (len(instruction.split()) != 2 or numOfReg != 1)): # not instruction
-        if(numOfReg != 1):
+    elif(instructionFunction == "0000100"): # not instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
             errorFlag = True
-    elif(instructionFunction == "0001001" and (len(instruction.split()) != 2 or numOfReg != 1)): # inc instruction
-       if(numOfReg != 1):
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0001001"): # inc instruction
+        #print(len(instruction.split()))
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
             errorFlag = True
-    elif(instructionFunction == "0001000" and (len(instruction.split()) != 2 or numOfReg != 1)): # dec instruction
-        if(numOfReg != 1):
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0001000"): # dec instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
             errorFlag = True
-    elif(instructionFunction == "0000011" and (len(instruction.split()) != 2 or numOfReg != 1)): # out instruction
-        if(numOfReg != 1):
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0000011"): # out instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
             errorFlag = True
-    elif(instructionFunction == "0001101" and (len(instruction.split()) != 2 or numOfReg != 1)): # in instruction
-        errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0001101"): # in instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
 
     elif(instructionFunction == "0010000" or instructionFunction == "0010001" or instructionFunction == "0010010"
          or instructionFunction == "0010011"): # add,sub,and,or instructions
@@ -139,10 +166,23 @@ def checkOnAdditiveText(instructionFunction,instruction):
         else:
             lastRegIndex = instruction.rfind(re.findall("[R-r][0-7]",instruction)[2])
             print("last reg = "+str(lastRegIndex))
-            instruction = instruction[lastRegIndex+2:].split()
-            if(len(instruction) > 0):
-                if(instruction[0] != "#"):
+            checkComment = instruction[lastRegIndex+2:].split()
+            if(len(checkComment) > 0):
+                if(checkComment[0] != "#"):
                     errorFlag = True
+            
+            if(instructionFunction == "0010011"):
+                instruction = instruction[2:]
+            else:
+                instruction = instruction[3:]
+            reg1 = instruction.split(",")[0].split()[0]
+            reg2 = instruction.split(",")[1].split()[0]
+            reg3 = instruction.split(",")[2].split()[0]
+            print("reg1 = "+reg1)
+            print("reg2 = "+reg2)
+            print("reg3 = "+reg3)
+            if(len(reg1) > 2 or len(reg2) > 2 or len(reg3) > 2):
+                errorFlag = True
    
     elif(instructionFunction == "0010100"): # swap instruction
         if((numOfCommas != 1 or numOfReg != 2)):
@@ -150,10 +190,18 @@ def checkOnAdditiveText(instructionFunction,instruction):
         else:
             lastRegIndex = instruction.rfind(re.findall("[R-r][0-7]",instruction)[1])
             print("last reg = "+str(lastRegIndex))
-            instruction = instruction[lastRegIndex+2:].split()
-            if(len(instruction) > 0):
-                if(instruction[0] != "#"):
+            checkComment = instruction[lastRegIndex+2:].split()
+            if(len(checkComment) > 0):
+                if(checkComment[0] != "#"):
                     errorFlag = True
+            
+            instruction = instruction[4:]
+            reg1 = instruction.split(",")[0].split()[0]
+            reg2 = instruction.split(",")[1].split()[0]
+            print("reg1 = "+reg1)
+            print("reg2 = "+reg2)
+            if(len(reg1) > 2 or len(reg2) > 2):
+                errorFlag = True
 
     elif(instructionFunction == "1011110"): # iadd instruction
         if((numOfCommas != 2 or numOfReg != 2)):
@@ -164,6 +212,15 @@ def checkOnAdditiveText(instructionFunction,instruction):
             if(len(lastElements) > 1):
                 if(lastElements[1][0] != "#"):
                     errorFlag = True
+        
+        instruction = instruction[4:]
+        reg1 = instruction.split(",")[0].split()[0]
+        reg2 = instruction.split(",")[1].split()[0]
+        print("reg1 = "+reg1)
+        print("reg2 = "+reg2)
+        if(len(reg1) > 2 or len(reg2) > 2):
+            errorFlag = True
+
                     
     elif(instructionFunction == "1011100" or instructionFunction == "1011101"): # shl,shr instructions
         if((numOfCommas != 1 or numOfReg != 1)):
@@ -173,11 +230,30 @@ def checkOnAdditiveText(instructionFunction,instruction):
             print(lastElements)
             if(len(lastElements) > 1):
                 errorFlag = True
+        
+        instruction = instruction[3:]
+        reg1 = instruction.split(",")[0].split()[0]
+        print("reg1 = "+reg1)
+        if(len(reg1) > 2):
+            errorFlag = True
 
-    elif(instructionFunction == "0100001" and len(instruction.split()) != 2): # pop instruction
-        errorFlag = True
-    elif(instructionFunction == "0100100" and len(instruction.split()) != 2): # push instruction
-        errorFlag = True
+    elif(instructionFunction == "0100001"): # pop instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0100100"): # push instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+
     elif(instructionFunction == "1101001" or instructionFunction == "1101011" or instructionFunction == "1101110"): # ldm,ldd,std instructions
         if((numOfCommas != 1 or numOfReg != 1)):
             errorFlag = True
@@ -186,13 +262,37 @@ def checkOnAdditiveText(instructionFunction,instruction):
             print(lastElements)
             if(len(lastElements) > 1):
                 errorFlag = True
+        
+        instruction = instruction[3:]
+        reg1 = instruction.split(",")[0].split()[0]
+        print("reg1 = "+reg1)
+        if(len(reg1) > 2):
+            errorFlag = True
 
-    elif(instructionFunction == "0110000"  and len(instruction.split()) != 2): # jz instruction
-        errorFlag = True
-    elif(instructionFunction == "0110001"  and len(instruction.split()) != 2): # jmp instruction
-        errorFlag = True
-    elif(instructionFunction == "0110010"  and len(instruction.split()) != 2): # call instruction
-        errorFlag = True
+    elif(instructionFunction == "0110000"): # jz instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0110001"): # jmp instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
+    elif(instructionFunction == "0110010"): # call instruction
+        if((len(instruction.split()) != 2 or numOfReg != 1)):
+            errorFlag = True
+        else:
+            reg1 = instruction.split()[1]
+            print("reg1 = "+reg1)
+            if(len(reg1) > 2):
+                errorFlag = True
     elif(instructionFunction == "0111100"  and len(instruction.split()) != 1): # ret instruction
         errorFlag = True
     elif(instructionFunction == "0111101"  and len(instruction.split()) != 1): # rti instruction

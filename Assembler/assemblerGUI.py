@@ -11,8 +11,6 @@ def printText():
         consoleWindow.configure(text="compiled successfully with zero errors",fg="green")
     else:
         consoleWindow.configure(text=errorString,fg="red")
-    
-    #print("retrun back")
 def openDialogBox():
     from tkinter import filedialog
    
@@ -41,33 +39,3 @@ textBody.pack(fill=BOTH)
 consoleWindow = Label(root,text="machine instructions would be generated in instructionMemory.mem and dataMemory.mem in the same directory/folder",fg="black",font="Arial")
 consoleWindow.pack(side=LEFT)
 root.mainloop()
-
-
-
-
-
-'''
-root = Tk() #creating the main window
-lb = Label(root,text="hey now brown cow", bg="green") #creating label
-lb.pack(fill=Y,side=LEFT) #showing the label
-'''
-#making frames to divide your window on them
-'''
-topFrame = Frame(root)
-topFrame.pack(side=TOP)
-bottomFrame = Frame(root)
-bottomFrame.pack(side=BOTTOM)
-
-#creating button
-b1 = Button(topFrame,text="click",fg="red")
-b1.pack(side=LEFT)
-
-b3 = Button(topFrame,text="click",fg="red")
-b3.pack(side=RIGHT)
-
-
-b2 = Button(bottomFrame,text="click here",fg="red")
-b2.pack(side=LEFT,fill=X)
-
-root.mainloop() # to make the application loops infinitly
-'''
