@@ -1,5 +1,5 @@
 from tkinter import *
-from assembler3 import *
+from assembler2 import *
 def printText():
      
     test = textBody.get("1.0", "end-1c") 
