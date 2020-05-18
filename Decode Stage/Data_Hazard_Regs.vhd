@@ -74,7 +74,7 @@ begin
     DHR2: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out);
     DHR2_out <= reg2_out;
 
-    stall_enable <= reg2_in xnor reg2_out;
+    stall_enable <= '1' when reg2_in = reg2_out else '0';
 
     -- 3rd register
     --reg3_rst <= ((not reg2_out(0)) or stall) or reset;
