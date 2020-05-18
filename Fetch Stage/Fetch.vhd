@@ -104,7 +104,7 @@ architecture Fetch_arch of Fetch is
 
     component is_jmp is
       port (
-      clk,reset,not_stall : in std_logic;
+      not_stall : in std_logic;
         IR : in std_logic_vector(15 downto 0);
       RTI,RET,CALL,JMP,JZ : out std_logic;
       Src_Reg_out : out std_logic_vector(2 downto 0)
@@ -127,7 +127,7 @@ architecture Fetch_arch of Fetch is
     signal ISR_PC: std_logic_vector (31 downto 0);
     --is jump signals 
     signal JMP,JMPZ,CALL,RET,RTI, isJumpEnable: std_logic;
-    signal src_reg: signal std_logic_vector (2 downto 0);
+    signal src_reg: std_logic_vector (2 downto 0);
     -- jmp data hazard signals
     signal dp,one_over_2,exe_mem,c1,c2, JmpDataHazard_en: std_logic;
     signal cycles: std_logic_vector (1 downto 0);
@@ -166,8 +166,8 @@ begin
     --ISR_PC <= (others =>'0');
     --one_stall_int <= '0';
     --is Jump
-    isJumpEnable <= (not (stall or INT2 or INT3 or flushm or one_stall_int));
-    isJump: is_jmp port map(clk,reset,isJumpEnable,IR,RTI,RET,CALL,JMP,JMPZ,src_reg);
+    isJumpEnable <= (not (stall or INT2 or INT3 or flush or one_stall_int));
+    isJump: is_jmp port map(isJumpEnable,IR,RTI,RET,CALL,JMP,JMPZ,src_reg);
     --JMP <= '0';
     --JMPZ <= '0';
     --CALL <= '0';
@@ -175,7 +175,7 @@ begin
     --RTI <= '0';
     --jump data hazard
     JmpDataHazard_en <= stall nor flush;
-    jmpDataHazard: JmpDataHazard port map(DHR1, DHR2, DHR3, JmpDataHazard_en, reset,src_reg
+    jmpDataHazard_circuit: JmpDataHazard port map(DHR1, DHR2, DHR3, JmpDataHazard_en, reset,src_reg,
     dp,one_over_2,exe_mem,cycles);
     one_two_out <= one_over_2;
     exe_mem_out <= exe_mem; 
