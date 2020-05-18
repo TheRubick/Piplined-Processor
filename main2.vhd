@@ -417,7 +417,7 @@ begin
 
   --Memory Stage , NOT ALU signal , dst1_mem,dst2_mem are missing , modify input port i.e. remove it from the inputs
   Memory_stage_component : Memory_stage_entity port map(clk, reset_module_out_fromFetch, reg1_wr_EX_OUT, reg2_wr_EX_OUT, dst1_add_EX_OUT, dst2_add_EX_OUT, MEM_RD_OUT, MEM_WR_OUT,OUT_OUT,IN_OUT,
-                      CALL_EX_OUT,INC_OUT,DEC_OUT,RET_EX_OUT,RTI_EX_OUT,INT_EX_OUT,ALU_Enable_EX_OUT,DP1_OUT,DP2_OUT,ADD_DST1_OUT,DATA_DST2_OUT,dst1_wb_out,dst2_wb_out,
+                      CALL_EX_OUT,INC_OUT,DEC_OUT,RET_EX_OUT,RTI_EX_OUT,INT_EX_OUT,ALU_ENABLE_out_ID_EX,DP1_OUT,DP2_OUT,ADD_DST1_OUT,DATA_DST2_OUT,dst1_wb_out,dst2_wb_out,
                       PC_OUT,in_port,
                       reg1_mem_out,reg2_mem_out,dst1_add_mem_out,dst2_add_mem_out, -- output signals
                       dst1_mem_out,dst2_mem_out,out_port,mem_data_to_fetch,flag_out,flag_in);
