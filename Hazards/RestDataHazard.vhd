@@ -8,7 +8,7 @@ PORT(
 Enable, Reset, Two_Operand : IN std_logic;
 --IR : IN std_logic_vector(15 downto 0);
 DHR2, DHR3 :IN std_logic_vector (11 downto 0);
-SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
+SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0); 
 DP1, DP2, C1, C2, R1, R2, LOADCASE : OUT std_logic
 );
 END RestDataHazard ;
