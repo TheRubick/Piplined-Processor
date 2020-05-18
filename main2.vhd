@@ -422,7 +422,7 @@ begin
             );
 
   -- connect Execute Stage
-    signal R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout: std_logic;
+  
   execute_component : EX_STAGE port map(clk, reset_module_out_fromFetch, IR_out_ID_EX, INT_out_ID_EX,
   JZ_out_ID_EX, LOADCASE_Dout, DP1_Dout, C1_Dout,R1_Dout,  DP2_Dout, C2_Dout, R2_Dout, STALL_out_ID_EX, OUT1_out_ID_EX,
   OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
