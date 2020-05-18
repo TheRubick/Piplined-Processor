@@ -50,7 +50,7 @@ begin
     if_1 <= (IR11 or IR12) and one_op;
     mem_part <= (not (IR11 xor IR12) ) and mem;
     
-    main_and <= if_1 and mem_part and two_op;
+    main_and <= if_1 or mem_part or two_op;
     reg1_0 <= (not flush) and main_and;
     reg1_rst <= ((not reg1_0) or reset);
     
