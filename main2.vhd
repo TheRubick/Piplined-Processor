@@ -143,6 +143,13 @@ architecture main_arch of main is
           JZ: in std_logic;
           JMP: in std_logic;
           STALL: in std_logic;
+          R1:in std_logic;
+          R2:in std_logic;
+          C1:in std_logic;
+          C2:in std_logic;
+          DP1:in std_logic;
+          DP2:in std_logic;
+          LOADCASE:in std_logic;
 
           IR_out: out std_logic_vector (15 downto 0);
           RET_out: out std_logic;
@@ -169,7 +176,14 @@ architecture main_arch of main is
           ALU_ENABLE_out: out std_logic;
           JZ_out: out std_logic;
           JMP_out: out std_logic;
-          STALL_out: out std_logic
+          STALL_out: out std_logic;
+          R1_out:out std_logic;
+          R2_out:out std_logic;
+          C1_out:out std_logic;
+          C2_out:out std_logic;
+          DP1_out:out std_logic;
+          DP2_out:out std_logic;
+          LOADCASE_out:out std_logic
         );
         end component;
 
@@ -329,6 +343,8 @@ architecture main_arch of main is
     signal JZ_out_ID_EX:  std_logic;
     signal JMP_out_ID_EX:  std_logic;
     signal STALL_out_ID_EX:  std_logic;
+    signal R1_out_ID_EX, R2_out_ID_EX, C1_out_ID_EX: std_logic;
+    signal C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX: std_logic;
 
     -- signals outed from Execute stage to Execute - Memory buffer
     signal Predication, Predication_Done, Flush_out :  std_logic; -- BranchPredicator outputs
@@ -393,7 +409,9 @@ begin
     ID_EX_buffer: decode_execute_buffer port map(clk,reset_module_out_fromFetch,IR_out_Dout,RET_Dout,call_Dout,PC_IF_ID,
                 INT,RTI_Dout,TEMP_OUT_SG,reg_write1_Dout,reg_write2_Dout,dst1_add_out_Dout,dst2_add_out_Dout,
                 out1_data_Dout,out2_data_Dout,EA_Dout,IMM_Dout, decreament_sp_Dout, increament_sp_Dout,out_signal_Dout, in_signal_Dout,memory_read_Dout,memory_write_Dout,
-                alu_src2_Dout,alu_enable_Dout,jz_Dout,jmp_Dout,STALL_Dout,IR_out_ID_EX,
+                alu_src2_Dout,alu_enable_Dout,jz_Dout,jmp_Dout,STALL_Dout
+                , R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout,
+                IR_out_ID_EX,
                 RET_out_ID_EX,
                  CALL_out_ID_EX,
                  PC_IF_EX_out_ID_EX,
@@ -418,13 +436,15 @@ begin
                  ALU_ENABLE_out_ID_EX,
                  JZ_out_ID_EX,
                  JMP_out_ID_EX,
-                 STALL_out_ID_EX
+                 STALL_out_ID_EX,
+                 R1_out_ID_EX, R2_out_ID_EX, C1_out_ID_EX,
+                 C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX
             );
 
   -- connect Execute Stage
-  
+
   execute_component : EX_STAGE port map(clk, reset_module_out_fromFetch, IR_out_ID_EX, INT_out_ID_EX,
-  JZ_out_ID_EX, LOADCASE_Dout, DP1_Dout, C1_Dout,R1_Dout,  DP2_Dout, C2_Dout, R2_Dout, STALL_out_ID_EX, OUT1_out_ID_EX,
+  JZ_out_ID_EX, LOADCASE_out_ID_EX, DP1_out_ID_EX, C1_out_ID_EX,R1_out_ID_EX,  DP2_out_ID_EX, C2_out_ID_EX, R2_out_ID_EX, STALL_out_ID_EX, OUT1_out_ID_EX,
   OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
   Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,
   Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX,flag_in,flag_out);
