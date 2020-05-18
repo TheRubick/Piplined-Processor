@@ -145,7 +145,7 @@ BEGIN
 		WR_sig <= SF or mem_wr_ex;
 		
 		current_address_value <= to_integer(unsigned(current_address));
-		current_address_final <= current_address when current_address_value < 1024 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
+		current_address_final <= current_address when current_address_value < 1024 and current_address_value >= 0 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
 		dataMemComponent : dataMemory port map(clk,WR_sig,RD_sig,current_address_final,current_data,datamem1);
 		mem_data_to_fetch <= datamem1;
 		
