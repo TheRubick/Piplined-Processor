@@ -357,7 +357,7 @@ def readLineByLine(textBody):
         if(instruction.find("#") != -1):
             instruction = instruction[:instruction.find("#")]
         #to ignore the white lines
-        if(instruction != ""):
+        if(len(instruction.split()) != 0):
             print("current instruction is "+instruction)
             if(instruction[:4].lower() == ".org"):
                 try:
@@ -437,7 +437,8 @@ def readLineByLine(textBody):
                         errorString = "error !! , improper instruction in line "+str(lineNumber+1)
                         errorFlag = True            
                     
-                    errorFlag = checkOnAdditiveText(instructionFunction,instruction)
+                    if(not(errorFlag)):
+                        errorFlag = checkOnAdditiveText(instructionFunction,instruction)
 
                     if(errorFlag):
                         print("error !! , non meaningful text in line "+str(lineNumber+1))
