@@ -11,7 +11,8 @@ ALU_Enable     :  IN std_logic;
 ALUOUT         :  OUT std_logic_vector(31 downto 0);
 IR  	         :  IN std_logic_vector(15 downto 0);
 REGFLAGIN      :  IN std_logic_vector(3 downto 0);   --  - zero - negative - carry
-REGFLAGOUT     :  OUT std_logic_vector(3 downto 0)
+REGFLAGOUT     :  OUT std_logic_vector(3 downto 0);
+JMPZ :  IN std_logic
 );
 END ALU ;
 
@@ -86,6 +87,7 @@ REGFLAGOUT(2)   <= '1' WHEN OUTPUT(31) = '1' AND ALU_Enable = '1' AND IR(14 down
 
 REGFLAGOUT(3)   <= '1' WHEN OUTPUT  = "00000000000000000000000000000000" AND ALU_Enable = '1' AND IR(14 downto 9 ) /= "010100"  ELSE
                    '0' WHEN OUTPUT /= "00000000000000000000000000000000" AND ALU_Enable = '1' AND IR(14 downto 9 ) /= "010100"  ELSE
+                   '0' WHEN JMPZ = '1' Else
                    REGFLAGIN(3);
 
 REGFLAGOUT(0)   <= '0';

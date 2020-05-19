@@ -47,7 +47,8 @@ ALU_Enable     :  IN std_logic;
 ALUOUT         :  OUT std_logic_vector(31 downto 0);
 IR  	         :  IN std_logic_vector(15 downto 0);
 REGFLAGIN      :  IN std_logic_vector(3 downto 0);   --  - zero - negative - carry
-REGFLAGOUT     :  OUT std_logic_vector(3 downto 0)
+REGFLAGOUT     :  OUT std_logic_vector(3 downto 0);
+JMPZ :  IN std_logic
 );
 END component ALU ;
 
@@ -126,7 +127,7 @@ swap_dp2_exe_mux2 : mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_
 
 flagout <= flag_from_mem;
 flag_to_mem <= flagin;
-ALU_COMP : ALU port map (firstinput, secondinput, ALU_Enable, ALUOUT, IR, flagout, flagin);   -- ALU module
+ALU_COMP : ALU port map (firstinput, secondinput, ALU_Enable, ALUOUT, IR, flagout, flagin,JMPZ);   -- ALU module
 --FlagRegister : generic_RAW_reg generic map (REG_WIDTH => 4) port map (flagin, CLK, RST, ALU_Enable, flagout); -- Flag register
 
 -- 2 muxes to choose firstinput and secondinput
