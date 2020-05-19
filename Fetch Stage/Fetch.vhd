@@ -174,7 +174,7 @@ begin
     --RET <= '0';
     --RTI <= '0';
     --jump data hazard
-    JmpDataHazard_en <= stall or flush;
+    JmpDataHazard_en <= not (stall or flush);
     jmpDataHazard_circuit: JmpDataHazard port map(DHR1, DHR2, DHR3, JmpDataHazard_en, reset,src_reg,
     dp,one_over_2,exe_mem,cycles);
     one_two_out <= one_over_2;
