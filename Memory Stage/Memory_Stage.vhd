@@ -132,7 +132,7 @@ BEGIN
 		
 	--Current data part
 		currentDataSel <= (call_ex or int_ex) & SF; --selector of this part
-		dp1MuxdstMem1dstMem2 : mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dst2_mem,dst1_mem,dp1,data_dst_dp);
+		dp1MuxdstMem1dstMem2 : mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dst2_mem_wire,dp1MuxOutput,dp1,data_dst_dp);
 		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
 		
 	
