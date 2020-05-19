@@ -53,6 +53,7 @@ architecture DHR_arch of DHR is
 
     signal if_1, mem_part, mux_selector, main_and: std_logic;
     signal reg1_rst,reg2_rst,reg3_rst, reg2_en, reg1_0: std_logic;
+    signal reg1_en: std_logic;
     signal mux_out, zero_one, one_zero, zero_zero: std_logic_vector (1 downto 0);
     signal reg1_out, reg2_out , reg3_out : std_logic_vector (11 downto 0);
     signal reg1_in, reg2_in , reg3_in : std_logic_vector (11 downto 0);
@@ -78,8 +79,9 @@ begin
     mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 2) port map (zero_one,one_zero,mux_selector,mux_out);
 
     -- 1st register
+    reg1_en <= not stall;
     reg1_in <= ( mux_out & zero_zero & I & IR_20 & reg2_wr & reg1_0);
-    DHR1: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg1_in ,clk,reg1_rst,'1',reg1_out);
+    DHR1: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg1_in ,clk,reg1_rst,reg1_en,reg1_out);
     DHR1_out <= reg1_out;
 
     -- 2nd regsiter
