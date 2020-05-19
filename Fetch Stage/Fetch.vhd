@@ -184,7 +184,7 @@ begin
     --one_over_2 <= '0';
     --exe_mem <= '0';
     c1 <= cycles(0);
-    c2 <= cycles(0);
+    c2 <= cycles(1);
     -- 
     --jmp ready
     Jmp_Ready <= (( (c1 or c2) and dp ) or stall );
