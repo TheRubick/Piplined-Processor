@@ -66,7 +66,8 @@ entity decode_stage is
     DP1_out:out std_logic;
     DP2_out:out std_logic;
     LOADCASE_out:out std_logic;
-    JMP_PC: out std_logic_vector (31 downto 0)
+    JMP_PC: out std_logic_vector (31 downto 0);
+    Stall_in: in std_logic
 
   );
 end decode_stage;
@@ -250,7 +251,7 @@ architecture  decode_stage_arch of decode_stage is
                                           alu_src2, out_signal, in_signal, alu_enable_signal, jz, jmp,memory, two_instruction_input, IR_out_signal,EA, IMM,
                                           decreament_sp, increament_sp, one_operand, two_operand, memory, reg_write2_signal);
 
-    dhr_regs:DHR PORT MAP (clk, reset, flush, stall_signal, one_operand, two_operand, memory, IR_out_signal(11)
+    dhr_regs:DHR PORT MAP (clk, reset, flush, Stall_in, one_operand, two_operand, memory, IR_out_signal(11)
                   , IR_out_signal(12), reg_write2_signal, IR_2_0, mux2_out, DHR1, DHR2, DHR3,stall_enable_sg);
 
     data_hazard1:RestDataHazard PORT MAP (stall_enable_sg ,'1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE);

@@ -67,13 +67,13 @@ architecture main_arch of main is
           exec_mem: in std_logic;
           one_or_two: in std_logic;
           DP: in std_logic;
-
+      
           call_out:out std_logic;
           RET_out:out std_logic;
           PC_IF_EX_out:out std_logic_vector (31 downto 0);
           INT_out:out std_logic;
           RTI_out:out std_logic;
-
+      
           reg_write1:out std_logic;
           reg_write2:out std_logic;
           memory_read:out std_logic;
@@ -97,7 +97,7 @@ architecture main_arch of main is
           out2_data: out std_logic_vector (31 downto 0);
           dst1_add_out:out std_logic_vector(2 downto 0);
           dst2_add_out:out std_logic_vector(2 downto 0);
-
+      
           DHR1_decode_out: out std_logic_vector (11 downto 0);
           DHR2_decode_out: out std_logic_vector (11 downto 0);
           DHR3_decode_out: out std_logic_vector (11 downto 0);
@@ -108,8 +108,9 @@ architecture main_arch of main is
           DP1_out:out std_logic;
           DP2_out:out std_logic;
           LOADCASE_out:out std_logic;
-          JMP_PC: out std_logic_vector (31 downto 0)
-
+          JMP_PC: out std_logic_vector (31 downto 0);
+          Stall_in: in std_logic
+      
         );
       end component;
 
@@ -402,7 +403,7 @@ begin
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
         out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout, DHR1_Dout, DHR2_Dout, DHR3_Dout, R1_Dout, R2_Dout, C1_Dout, C2_Dout,
-        DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout
+        DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout,R1_out_ID_EX
     );
 
     TEMP_OUT_SG <= IR_out_Dout(13 downto 9);
