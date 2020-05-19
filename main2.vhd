@@ -407,7 +407,7 @@ begin
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
         out2_data_Dout,dst1_add_out_Dout,dst2_add_out_Dout, DHR1_Dout, DHR2_Dout, DHR3_Dout, R1_Dout, R2_Dout, C1_Dout, C2_Dout,
-        DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout,STALL_out_ID_EX
+        DP1_Dout, DP2_Dout, LOADCASE_Dout, JMP_PC_Dout,STALL_out_ID_EX,S1_1_2_Dout, S2_1_2_Dout
     );
 
     TEMP_OUT_SG <= IR_out_Dout(13 downto 9);

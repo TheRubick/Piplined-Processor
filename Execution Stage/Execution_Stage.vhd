@@ -104,20 +104,21 @@ END component ;
 
 
 --signal result : std_logic_vector(3 downto 0);
-signal firstinput , secondinput_temp, secondinput ,ALUOUT, IMM_OR_EA, ALU_OR_MEM, Swap_operand , SwapDP_operand : std_logic_vector(31 downto 0);
+signal firstinput , secondinput_temp, secondinput ,ALUOUT, IMM_OR_EA, ALU_OR_MEM, Swap_operand , SwapDP_operand ,SwapDP_EXE : std_logic_vector(31 downto 0);
 signal flagin , flagout : std_logic_vector(3 downto 0);
 signal Sel_1, Sel_2 : std_logic_vector(1 downto 0);
 signal Sel, DP_Sel, INT_Sel, Swap : std_logic;
 signal Flush,PR_Done :std_logic;
-signal swap_dp1 , swap_dp2 : std_logic;
+signal swap_dp1 , swap_dp2, swap_dp2_exe : std_logic;
 
 begin
 
 swap_dp1 <= DP1 AND R1 AND S1_1_2_out_ID_EX;
 swap_dp2 <= DP2 AND R2 AND S2_1_2_out_ID_EX;
+swap_dp2_exe <= DP2 AND Not(R2) AND S2_1_2_out_ID_EX;
 
 Swap_DP :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_MEM, Dst2_MEM, swap_dp2, SwapDP_operand);
-
+swap_dp2_exe_mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_EX, Dst2_EX, swap_dp2_exe, SwapDP_EXE);
 
 flagout <= flag_from_mem;
 flag_to_mem <= flagin;
@@ -130,7 +131,7 @@ Sel_2 <= dp2 & R2;  -- selector INPUT2_Temp_Mux
 Sel <= IR(12) AND IR(11); -- selector INPUT2_Mux
 
 INPUT1_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT1, OUT1, Dst1_EX, Dst1_MEM, Sel_1 ,firstinput);
-INPUT2_Temp_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT2, OUT2, Dst2_EX, SwapDP_operand, Sel_2 ,secondinput_temp);--
+INPUT2_Temp_Mux : mux4_generic generic map (INPUT_WIDTH => 32) port map (OUT2, OUT2, SwapDP_EXE, SwapDP_operand, Sel_2 ,secondinput_temp);--
 INPUT2_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (secondinput_temp, IMM, Sel, secondinput);
 
 
