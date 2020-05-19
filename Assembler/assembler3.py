@@ -506,7 +506,7 @@ def readLineByLine(textBody):
                 if(dataPointer > 0):
                     variableValue = "{0:032b}".format(int(instruction, 16))
                     #print(variableValue[:16])
-                    dataMemory.append(variableValue)
+                    dataMemory[dataPointer-1] = (variableValue)
                     print("HEREEEEEEEEEEEE")
                     #print(variableValue[16:])
                     #dataMemory.append(variableValue[16:])
