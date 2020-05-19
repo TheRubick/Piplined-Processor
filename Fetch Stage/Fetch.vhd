@@ -187,7 +187,7 @@ begin
     c2 <= cycles(1);
     -- 
     --jmp ready
-    Jmp_Ready <= (( (c1 or c2) and dp ) or stall );
+    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET;
 
     --latches
     ret_Latch_input <= (RET_Ex_MEM xor RET);
