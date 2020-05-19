@@ -119,8 +119,8 @@ swap_dp2_exe1 <= DP1 AND Not(R1) AND S1_1_2_out_ID_EX;
 swap_dp2_exe2 <= DP2 AND Not(R2) AND S2_1_2_out_ID_EX;
 
 
-Swap_DP1_Mux :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_MEM, Dst2_MEM, swap_dp1, SwapDP_operand1);
-Swap_DP2_Mux :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_MEM, Dst2_MEM, swap_dp2, SwapDP_operand2);
+Swap_DP1 :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_MEM, Dst2_MEM, swap_dp1, SwapDP_operand1);
+Swap_DP2 :  mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_MEM, Dst2_MEM, swap_dp2, SwapDP_operand2);
 swap_dp2_exe_mux1 : mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_EX, Dst2_EX, swap_dp2_exe1, SwapDP_EXE1);
 swap_dp2_exe_mux2 : mux2_generic generic map (INPUT_WIDTH => 32) port map (Dst1_EX, Dst2_EX, swap_dp2_exe2, SwapDP_EXE2);
 
