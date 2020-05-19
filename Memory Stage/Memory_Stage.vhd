@@ -142,7 +142,7 @@ BEGIN
 		dp2Mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,dst2_mem,dp2,dst2_mem_wire);
 		
 		--Read and Write signals
-		RD_sig <= RF or mem_rd_ex;
+		RD_sig <= RF or mem_rd_ex or ret_ex;
 		WR_sig <= SF or mem_wr_ex;
 		
 		current_address_value <= to_integer(unsigned(current_address));
