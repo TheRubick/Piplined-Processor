@@ -142,8 +142,8 @@ BEGIN
 		dp2Mux: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,dst2_mem,dp2,dst2_mem_wire);
 		
 		--Read and Write signals
-		RD_sig <= RF or mem_rd_ex or ret_ex;
-		WR_sig <= SF or mem_wr_ex;
+		RD_sig <= RF or mem_rd_ex or ret_ex or rti_ex;
+		WR_sig <= SF or mem_wr_ex or int_ex;
 		
 		current_address_value <= to_integer(unsigned(current_address));
 		current_address_final <= current_address when current_address_value < 1024 and current_address_value >= 0 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
@@ -162,7 +162,7 @@ BEGIN
 		spLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spOutputData);
 		
 		--incSpWire
-		incSpWire <= inc_ex or RF or SF or rti_ex or int_ex or ret_ex;
+		incSpWire <= inc_ex or RF or SF or rti_ex or ret_ex;
 		--decSpWire
 		decSpWire <= dec_ex or int_ex or call_ex;
 		--updateSp Latch
