@@ -153,7 +153,7 @@ begin
   interrupt_module: Interrupt port map(clk,interrupt_sg,reset_sg,JMP,RET,RTI,JMPZ,IR,RTI_Ex_MEM,RET_Ex_MEM,
                       Jmp_Ready,Prediction_Done,
                       reset,reset1,INT,INT2,INT3,INTZF,IntZ_notF,Jmpz2,ISR_PC,one_stall_int);
-    jump_reg_add <= "000";
+    jump_reg_add <= src_reg;
     --temp signasl of interrupt
     --reset <= reset_sg;
     --reset1 <= '0';
