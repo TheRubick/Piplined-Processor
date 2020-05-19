@@ -214,13 +214,15 @@ def checkOnAdditiveText(instructionFunction,instruction):
                     errorFlag = True
         
         instruction = instruction[4:]
-        reg1 = instruction.split(",")[0].split()[0]
-        reg2 = instruction.split(",")[1].split()[0]
-        print("reg1 = "+reg1)
-        print("reg2 = "+reg2)
-        if(len(reg1) > 2 or len(reg2) > 2):
+        try:
+            reg1 = instruction.split(",")[0].split()[0]
+            reg2 = instruction.split(",")[1].split()[0]
+            print("reg1 = "+reg1)
+            print("reg2 = "+reg2)
+            if(len(reg1) > 2 or len(reg2) > 2):
+                errorFlag = True
+        except:
             errorFlag = True
-
                     
     elif(instructionFunction == "1011100" or instructionFunction == "1011101"): # shl,shr instructions
         if((numOfCommas != 1 or numOfReg != 1)):
@@ -345,6 +347,7 @@ def readLineByLine(textBody):
     lineNumber = 0
     errorFlag = False
     changePointer = False
+    isAfterOrg = False
     for i in range(0,2048):
         instructionMemory.append("0000000000000000")
     
@@ -364,26 +367,29 @@ def readLineByLine(textBody):
                     instructionPointer = int(instruction[4:], 16)
                     print("right"+str(instructionPointer))
                     changePointer = False
+                    isAfterOrg = True
                 except:
                     print("error")
                         
-            elif(not(".data" in instruction.lower()) and dataPointer == 0):        
+            elif(".data" != instruction[0:5].split()[0].lower() and dataPointer == 0):        
                 if(instruction[0:1] != "#"):
                     oneTwoThreeOp = []
                     for i, ltr in enumerate(instruction): 
                         if ltr == ',':
                             oneTwoThreeOp.append(i)
 
-                if(isNumNotinst(instruction)):
+                if(isNumNotinst(instruction) and isAfterOrg):
                     immediateValue = "{0:016b}".format(int(instruction, 16))
                     instructionMemory[instructionPointer] = "0000000000000000"
                     instructionPointer += 1
                     instructionMemory[instructionPointer] = immediateValue
+                    isAfterOrg= False
                 else:
                     instructionFunction = ""
                     print("HREEEE")
                     #instruction operation text
                     instructionOperation = re.findall("[a-zA-Z]*",instruction)[0]
+                    print("operation is "+instructionOperation)
                     if("nop" == instructionOperation.lower()):
                         instructionFunction = "0000000"
                     elif("not" == instructionOperation.lower()):
@@ -436,7 +442,7 @@ def readLineByLine(textBody):
                         print("error !! , improper instruction operation in line "+str(lineNumber+1))
                         errorString = "error !! , improper instruction in line "+str(lineNumber+1)
                         errorFlag = True            
-                    
+                    print("instruction Function is "+instructionFunction)
                     if(not(errorFlag)):
                         errorFlag = checkOnAdditiveText(instructionFunction,instruction)
 
