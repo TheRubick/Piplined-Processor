@@ -27,18 +27,19 @@ architecture DHR_arch of DHR is
     end component;
 
     component generic_DHR_reg is
-    GENERIC(
-       REG_WIDTH : INTEGER := 16);
-      port (
-        d: in std_logic_vector (REG_WIDTH - 1 downto 0);
-        clk: in std_logic;
-        clear: in std_logic;
-    enable: in std_logic;
-        q: out std_logic_vector (REG_WIDTH - 1 downto 0);
-        flag : out std_logic
-
-      ) ;
-     end component;
+        GENERIC(
+           REG_WIDTH : INTEGER := 16);
+          port (
+            d: in std_logic_vector (REG_WIDTH - 1 downto 0);
+            clk: in std_logic;
+            clear: in std_logic;
+        enable: in std_logic;
+            q: out std_logic_vector (REG_WIDTH - 1 downto 0);
+            flag : out std_logic;
+            stall: in std_logic
+        
+          ) ;
+        end component;
 
     component mux2_generic is
         GENERIC(
@@ -86,7 +87,7 @@ begin
     reg2_rst <= reset;
     reg2_en <= not stall;
     reg2_in <= ( reg1_out (11 downto 10) & zero_one & reg1_out(7 downto 0));
-    DHR2: generic_DHR_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out,stall_enable);
+    DHR2: generic_DHR_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out,stall_enable,stall);
     DHR2_out <= reg2_out;
 
     --stall_enable <= '1' when reg2_in = reg2_out else '0';

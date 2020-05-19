@@ -10,7 +10,8 @@ GENERIC(
     clear: in std_logic;
 enable: in std_logic;
     q: out std_logic_vector (REG_WIDTH - 1 downto 0);
-    flag : out std_logic
+    flag : out std_logic;
+    stall: in std_logic
 
   ) ;
 end generic_DHR_reg;
@@ -23,7 +24,11 @@ begin
         if (clear = '1') then
             q <= (others =>'0');
         elsif (falling_edge(clk) and enable='1') then
+          if stall = '1' then
+            q <= (others =>'0');
+            else
             q <= d;
+            end if;
             Temp := '1';
             flag <= Temp;
           elsif rising_edge(clk) then
