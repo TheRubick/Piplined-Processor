@@ -33,7 +33,7 @@ architecture Special_latch_arch of Special_latch is
 
 begin
 
-  reset <= not(tempin) or clear;
+  reset <= clear;
   tempin <= d ;
 
   call_latch  : WAR_latch port map(tempin, CLK, reset , '1', tempout);
