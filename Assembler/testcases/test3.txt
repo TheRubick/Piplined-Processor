@@ -1,0 +1,15 @@
+# testcase3
+.ORG 0  
+10
+#you should ignore empty lines
+.ORG 2  #this is the interrupt address
+100
+
+.ORG 10
+inc r1
+dec r2
+swap r1,r2
+inc r3
+swap r1,r2
+
+#r1-> 1 r2 -> -1 r3->1
