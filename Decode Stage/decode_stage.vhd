@@ -67,7 +67,8 @@ entity decode_stage is
     DP2_out:out std_logic;
     LOADCASE_out:out std_logic;
     JMP_PC: out std_logic_vector (31 downto 0);
-    Stall_in: in std_logic
+    Stall_in: in std_logic;
+    S1_1_2_out,S2_1_2_out : out std_logic
 
   );
 end decode_stage;
@@ -133,7 +134,7 @@ architecture  decode_stage_arch of decode_stage is
       stall_enable,Enable, Reset, Two_Operand : IN std_logic;
       DHR2, DHR3 :IN std_logic_vector (11 downto 0);
       SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
-      DP1, DP2, C1, C2, R1, R2, LOADCASE : OUT std_logic
+      DP1, DP2, C1, C2, R1, R2, LOADCASE,S1_1_2,S2_1_2 : OUT std_logic
       );
       END component ;
 
@@ -205,6 +206,7 @@ architecture  decode_stage_arch of decode_stage is
     signal stall_signal: std_logic;
     signal alu_enable_signal: std_logic;
     signal jump_reg_data_signal: std_logic_vector (31 downto 0);
+    signal S1_1_2,S2_1_2 :std_logic;
 
     signal stall_enable_sg: std_logic;
     BEGIN
@@ -232,6 +234,8 @@ architecture  decode_stage_arch of decode_stage is
     DP1_out <= DP1;
     DP2_out <= DP2;
     LOADCASE_out <= LOADCASE;
+    S1_1_2_out <= S1_1_2 ;
+    S2_1_2_out <= S2_1_2 ;
     mux4_select <= exec_mem & one_or_two;
     and1_out <= (not C1) and stall_signal;
     and2_out <= (not C2) and stall_signal;
@@ -254,7 +258,7 @@ architecture  decode_stage_arch of decode_stage is
     dhr_regs:DHR PORT MAP (clk, reset, flush, Stall_in, one_operand, two_operand, memory, IR_out_signal(11)
                   , IR_out_signal(12), reg_write2_signal, IR_2_0, mux2_out, DHR1, DHR2, DHR3,stall_enable_sg);
 
-    data_hazard1:RestDataHazard PORT MAP (stall_enable_sg ,'1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE);
+    data_hazard1:RestDataHazard PORT MAP (stall_enable_sg ,'1', reset, two_operand, DHR2, DHR3, mux2_out, src2_add, DP1, DP2, C1, C2, R1, R2, LOADCASE, S1_1_2,S2_1_2);
 
 
 end decode_stage_arch;

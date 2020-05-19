@@ -71,7 +71,7 @@ port (
   C2_out:out std_logic;
   DP1_out:out std_logic;
   DP2_out:out std_logic;
-  LOADCASE_out:out std_logic;
+  LOADCASE_out:out std_logic
   S1_1_2_Dout, S2_1_2_Dout : in std_logic;
   S1_1_2_out_ID_EX, S2_1_2_out_ID_EX : out std_logic
 );

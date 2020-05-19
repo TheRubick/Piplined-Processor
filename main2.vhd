@@ -67,13 +67,13 @@ architecture main_arch of main is
           exec_mem: in std_logic;
           one_or_two: in std_logic;
           DP: in std_logic;
-      
+
           call_out:out std_logic;
           RET_out:out std_logic;
           PC_IF_EX_out:out std_logic_vector (31 downto 0);
           INT_out:out std_logic;
           RTI_out:out std_logic;
-      
+
           reg_write1:out std_logic;
           reg_write2:out std_logic;
           memory_read:out std_logic;
@@ -97,7 +97,7 @@ architecture main_arch of main is
           out2_data: out std_logic_vector (31 downto 0);
           dst1_add_out:out std_logic_vector(2 downto 0);
           dst2_add_out:out std_logic_vector(2 downto 0);
-      
+
           DHR1_decode_out: out std_logic_vector (11 downto 0);
           DHR2_decode_out: out std_logic_vector (11 downto 0);
           DHR3_decode_out: out std_logic_vector (11 downto 0);
@@ -109,8 +109,9 @@ architecture main_arch of main is
           DP2_out:out std_logic;
           LOADCASE_out:out std_logic;
           JMP_PC: out std_logic_vector (31 downto 0);
-          Stall_in: in std_logic
-      
+          Stall_in: in std_logic;
+          S1_1_2_out,S2_1_2_out : out std_logic
+
         );
       end component;
 
@@ -184,7 +185,9 @@ architecture main_arch of main is
           C2_out:out std_logic;
           DP1_out:out std_logic;
           DP2_out:out std_logic;
-          LOADCASE_out:out std_logic
+          LOADCASE_out:out std_logic;
+          S1_1_2_Dout, S2_1_2_Dout : in std_logic;
+          S1_1_2_out_ID_EX, S2_1_2_out_ID_EX : out std_logic
         );
         end component;
 
@@ -205,7 +208,8 @@ architecture main_arch of main is
 		DP1_EX, DP2_EX : OUT std_logic;
 		PC_EX, ADD_DST1_EX, DATA_DST2_EX : OUT std_logic_vector(31 downto 0);
 		flag_from_mem : in std_logic_vector(3 downto 0);
-		flag_to_mem : out std_logic_vector(3 downto 0)
+		flag_to_mem : out std_logic_vector(3 downto 0);
+    S1_1_2_out_ID_EX, S2_1_2_out_ID_EX : in std_logic
 		);
         END component;
 
@@ -312,7 +316,7 @@ architecture main_arch of main is
     signal dst1_add_out_Dout: std_logic_vector(2 downto 0);
     signal dst2_add_out_Dout: std_logic_vector(2 downto 0);
     signal DHR1_Dout, DHR2_Dout, DHR3_Dout: std_logic_vector (11 downto 0);
-    signal R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout: std_logic;
+    signal R1_Dout, R2_Dout, C1_Dout, C2_Dout,DP1_Dout, DP2_Dout, LOADCASE_Dout, S1_1_2_Dout, S2_1_2_Dout :std_logic;
     signal JMP_PC_Dout: std_logic_vector (31 downto 0);
 
     -- ID_EX_Buffer signasl
@@ -345,7 +349,7 @@ architecture main_arch of main is
     signal JMP_out_ID_EX:  std_logic;
     signal STALL_out_ID_EX:  std_logic;
     signal R1_out_ID_EX, R2_out_ID_EX, C1_out_ID_EX: std_logic;
-    signal C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX: std_logic;
+    signal C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX ,S1_1_2_out_ID_EX, S2_1_2_out_ID_EX: std_logic;
 
     -- signals outed from Execute stage to Execute - Memory buffer
     signal Predication, Predication_Done, Flush_out :  std_logic; -- BranchPredicator outputs
@@ -439,7 +443,8 @@ begin
                  JMP_out_ID_EX,
                  STALL_out_ID_EX,
                  R1_out_ID_EX, R2_out_ID_EX, C1_out_ID_EX,
-                 C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX
+                 C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX,
+                S1_1_2_Dout, S2_1_2_Dout, S1_1_2_out_ID_EX, S2_1_2_out_ID_EX
             );
 
   -- connect Execute Stage
@@ -448,7 +453,7 @@ begin
   JZ_out_ID_EX, LOADCASE_out_ID_EX, DP1_out_ID_EX, C1_out_ID_EX,R1_out_ID_EX,  DP2_out_ID_EX, C2_out_ID_EX, R2_out_ID_EX, STALL_out_ID_EX, OUT1_out_ID_EX,
   OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
   Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,
-  Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX,flag_in,flag_out);
+  Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX,flag_in,flag_out,S1_1_2_out_ID_EX, S2_1_2_out_ID_EX);
 
   -- Execute Memory Buffer
   EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, STALL_out_ID_EX,

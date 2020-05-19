@@ -9,7 +9,7 @@ PORT(
 stall_enable ,Enable, Reset, Two_Operand : IN std_logic;
 DHR2, DHR3 :IN std_logic_vector (11 downto 0);
 SrcReg1, SrcReg2 : IN std_logic_vector (2 downto 0);
-DP1, DP2, C1, C2, R1, R2, LOADCASE : OUT std_logic
+DP1, DP2, C1, C2, R1, R2, LOADCASE,S1_1_2,S2_1_2 : OUT std_logic
 );
 END RestDataHazard ;
 
@@ -35,11 +35,11 @@ end component mux2_1bit ;
 --signal result : std_logic_vector(3 downto 0);
 signal clear1, clear2 : std_logic;
 
-signal DHR2_Result1_S1, DHR2_Result2_S1, DP2_S1 :std_logic;
-signal DHR3_Result1_S1, DHR3_Result2_S1, DP3_S1 :std_logic;
-
-signal DHR2_Result1_S2, DHR2_Result2_S2, DP2_S2 :std_logic;
-signal DHR3_Result1_S2, DHR3_Result2_S2, DP3_S2 :std_logic;
+signal DHR2_Result1_S1, DHR2_Result2_S1, DP2_S1, DST2_1_2_S1 :std_logic;
+signal DHR3_Result1_S1, DHR3_Result2_S1, DP3_S1, DST3_1_2_S1 :std_logic;
+signal src1_1_2, src2_1_2 : std_logic;
+signal DHR2_Result1_S2, DHR2_Result2_S2, DP2_S2, DST2_1_2_S2 :std_logic;
+signal DHR3_Result1_S2, DHR3_Result2_S2, DP3_S2, DST3_1_2_S2 :std_logic;
 signal RC_SEL_TEMP1, RC_SEL_TEMP2 : std_logic_vector(3 downto 0);
 
 begin
@@ -52,11 +52,13 @@ clear2 <= (Not(Enable) OR Reset OR Not(Two_Operand)) AND (Not(stall_enable)) ;
 DHR2_Result1_S1 <= ( DHR2(2) XNOR SrcReg1(0) ) AND  ( DHR2(3) XNOR SrcReg1(1) ) AND ( DHR2(4) XNOR SrcReg1(2) ) AND DHR2(0);
 DHR2_Result2_S1 <= ( DHR2(5) XNOR SrcReg1(0) ) AND  ( DHR2(6) XNOR SrcReg1(1) ) AND ( DHR2(7) XNOR SrcReg1(2) ) AND (DHR2(0) AND DHR2(1)) ;
 DP2_S1 <= (DHR2_Result1_S1 OR DHR2_Result2_S1)  AND stall_enable;
+DST2_1_2_Mux_S1: mux2_1bit  port map ('0', '1', DHR2_Result2_S1, DST2_1_2_S1);
 
 -- for DHR3 and SrcReg1
 DHR3_Result1_S1 <= ( DHR3(2) XNOR SrcReg1(0) ) AND  ( DHR3(3) XNOR SrcReg1(1) ) AND ( DHR3(4) XNOR SrcReg1(2) ) AND DHR3(0);
 DHR3_Result2_S1 <= ( DHR3(5) XNOR SrcReg1(0) ) AND  ( DHR3(6) XNOR SrcReg1(1) ) AND ( DHR3(7) XNOR SrcReg1(2) ) AND (DHR3(0) AND DHR3(1)) ;
 DP3_S1 <= DHR3_Result1_S1 OR DHR3_Result2_S1;
+DST3_1_2_Mux_S1: mux2_1bit  port map ('0', '1', DHR3_Result2_S1, DST3_1_2_S1);
 
 -- select DP1
 DP1 <= (DP2_S1 OR DP3_S1) AND Not(clear1);  -- here we out Right DP1
@@ -66,19 +68,24 @@ RC3_OR_RC2_Mux_S1 : mux2_generic generic map (INPUT_WIDTH => 4) port map (DHR3(1
 C1 <= RC_SEL_TEMP1(1) AND Not(clear1);
 R1 <= RC_SEL_TEMP1(3) AND Not(clear1);
 
+-- select 1_2_S1
+
+src1_1_2_Mux: mux2_1bit  port map (DST3_1_2_S1, DST2_1_2_S1, DP2_S1, src1_1_2);
+S1_1_2 <= src1_1_2 AND Not(clear1);
 
 -- for DHR2 and SrcReg2
 
 DHR2_Result1_S2 <= ( DHR2(2) XNOR SrcReg2(0) ) AND  ( DHR2(3) XNOR SrcReg2(1) ) AND ( DHR2(4) XNOR SrcReg2(2) ) AND DHR2(0);
 DHR2_Result2_S2 <= ( DHR2(5) XNOR SrcReg2(0) ) AND  ( DHR2(6) XNOR SrcReg2(1) ) AND ( DHR2(7) XNOR SrcReg2(2) ) AND (DHR2(0) AND DHR2(1)) ;
 DP2_S2 <= (DHR2_Result1_S2 OR DHR2_Result2_S2) AND stall_enable;
-
+DST2_1_2_Mux_S2: mux2_1bit  port map ('0', '1', DHR2_Result2_S2, DST2_1_2_S2);
 
 -- for DHR3 and SrcReg2
 
 DHR3_Result1_S2 <= ( DHR3(2) XNOR SrcReg2(0) ) AND  ( DHR3(3) XNOR SrcReg2(1) ) AND ( DHR3(4) XNOR SrcReg2(2) ) AND DHR3(0);
 DHR3_Result2_S2 <= ( DHR3(5) XNOR SrcReg2(0) ) AND  ( DHR3(6) XNOR SrcReg2(1) ) AND ( DHR3(7) XNOR SrcReg2(2) ) AND (DHR3(0) AND DHR3(1)) ;
 DP3_S2 <= DHR3_Result1_S2 OR DHR3_Result2_S2 ;
+DST3_1_2_Mux_S2: mux2_1bit  port map ('0', '1', DHR3_Result2_S2, DST3_1_2_S2);
 
 -- select DP2
 DP2 <= (DP2_S2 OR DP3_S2) AND Not(clear2);  -- here we out Right DP2
@@ -88,6 +95,10 @@ RC3_OR_RC2_Mux_S2 : mux2_generic generic map (INPUT_WIDTH => 4) port map (DHR3(1
 C2 <= RC_SEL_TEMP2(1) AND Not(clear2);
 R2 <= RC_SEL_TEMP2(3) AND Not(clear2);
 
+-- select 1_2_S2
+src2_1_2_Mux: mux2_1bit  port map (DST3_1_2_S2, DST2_1_2_S2, DP2_S2, src2_1_2);
+
+S2_1_2 <= src2_1_2 AND Not(clear2);
 --
 -- EX_VAR : process (clk)
 --   variable Temp : std_logic := '0';
