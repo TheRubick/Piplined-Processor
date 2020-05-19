@@ -33,7 +33,7 @@ architecture Special_latch_arch of Special_latch is
 
 begin
 
-  reset <= not(tempin);
+  reset <= not(tempin) or clear;
   tempin <= d ;
 
   call_latch  : WAR_latch port map(tempin, CLK, reset , '1', tempout);
@@ -46,7 +46,7 @@ begin
       		if ( tempin = '1' and tempout =  '0' ) then
                   q <= '1' ;
           end if;
-          if ( TEMP_OUT = '1' ) then
+          if ( tempout = '1' ) then
                   q <= '0' ;
           end if ;
 
@@ -55,22 +55,3 @@ begin
 
 
 end Special_latch_arch ;
---
--- begin
---
---   EX_VAR : process (i_clk)
---     variable Temp : std_logic := '0';
---   begin
---     if falling_edge(i_clk) then
---
---       Temp := '1';
---       o_done <= Temp;
---     elsif rising_edge(i_clk) then
---       Temp := '0';
---       o_done <= Temp;
---
---     end if;
---   end process EX_VAR;
---
---
--- end rtl;

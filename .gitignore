@@ -6,6 +6,7 @@ work/
 *.zip
 .idea/
 *.exe
+*.bak
 transcript
 *vscode*
 gellesh_instructions.txt
