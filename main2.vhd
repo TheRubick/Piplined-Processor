@@ -20,7 +20,7 @@ architecture main_arch of main is
       clk,reset_sg,interrupt_sg:in std_logic;
       stall,RET_Ex_MEM, RTI_Ex_MEM,CALL_Ex_Mem,Predict,flush, Prediction_Done: in std_logic;
       Jmp_PC, Mem_data, PC_ID_EX: in std_logic_vector (31 downto 0);
-      RTI_Buff, RET_Buff, CALL_Buff,RET_module_out, RTI_module_out, CALL_module_out, INT_module_out, reset_module_out: out std_logic;
+      RTI_Buff, RET_Buff, CALL_Buff, INT_module_out, reset_module_out: out std_logic;
       IR_Buff: out std_logic_vector (15 downto 0);
       PPC: out std_logic_vector (31 downto 0);
       jump_reg_add: out std_logic_vector (2 downto 0);
@@ -29,10 +29,10 @@ architecture main_arch of main is
       one_two_out, exe_mem_out, dp_out: out std_logic
     ) ;
   end component;
-
+  
   component IF_IR_Buffer is
     port (
-      clk,RTI_Buff, RET_Buff, CALL_Buff, RET_in, RTI_in, CALL_in, INT_in, reset, two_inst_in: in std_logic;
+      clk,RTI_Buff, RET_Buff, CALL_Buff, INT_in, reset, two_inst_in: in std_logic;
       IR_Buff: in std_logic_vector (15 downto 0);
       PPC: in std_logic_vector (31 downto 0);
       two_ints, CALL, RET, RTI, INT: out std_logic;
@@ -388,7 +388,7 @@ begin
     CALL_EX_OUT,Predication,Flush_out, Predication_Done,
     JMP_PC_Dout,mem_data_to_fetch,PC_IF_EX_out_ID_EX,
     RTI_Buff_fromFetch, RET_Buff_fromFetch,
-    CALL_Buff_fromFetch,RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch,
+    CALL_Buff_fromFetch,
     INT_module_out_fromFetch,reset_module_out_fromFetch,IR_Buff_fromFetch,PPC_fromFetch,
     jump_reg_add_fromFetch,Jmp_Int_PC_fromFetch,
     DHR1_Dout, DHR2_Dout, DHR3_Dout,
@@ -396,7 +396,7 @@ begin
 
     --FETCH buffer
     if_id_buffer: IF_IR_Buffer port map(clk,RTI_Buff_fromFetch, RET_Buff_fromFetch, CALL_Buff_fromFetch,
-        RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch, INT_module_out_fromFetch,
+        INT_module_out_fromFetch,
         reset_module_out_fromFetch,two_instruction_input_Dout
         ,IR_Buff_fromFetch,PPC_fromFetch,
         two_ints, CALL, RET, RTI, INT,PC_IF_ID,IR_IF_ID,dp_out_fetch,dp_out_IF_ID);

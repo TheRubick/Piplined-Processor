@@ -8,7 +8,7 @@ entity Fetch is
     clk,reset_sg,interrupt_sg:in std_logic;
     stall,RET_Ex_MEM, RTI_Ex_MEM,CALL_Ex_Mem,Predict,flush, Prediction_Done: in std_logic;
     Jmp_PC, Mem_data, PC_ID_EX: in std_logic_vector (31 downto 0);
-    RTI_Buff, RET_Buff, CALL_Buff,RET_module_out, RTI_module_out, CALL_module_out, INT_module_out, reset_module_out: out std_logic;
+    RTI_Buff, RET_Buff, CALL_Buff, INT_module_out, reset_module_out: out std_logic;
     IR_Buff: out std_logic_vector (15 downto 0);
     PPC: out std_logic_vector (31 downto 0);
     jump_reg_add: out std_logic_vector (2 downto 0);
@@ -190,20 +190,23 @@ begin
     Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET;
 
     --latches
-    ret_Latch_input <= (RET_Ex_MEM xor RET);
-    ret_latch: WAR_latch port map(ret_Latch_input , clk, reset, RET, RET_out );
-    RET_Buff <= not RET_out;
-    RET_module_out <= RET;
+    --ret_Latch_input <= (RET_Ex_MEM xor RET);
+    --ret_latch: WAR_latch port map(ret_Latch_input , clk, reset, RET, RET_out );
+    --RET_Buff <= not RET_out;
+    --RET_module_out <= RET;
+    RET_Buff <= RET;
 
-    rti_latch_input <= (RTI_Ex_MEM xor RTI);
-    rti_latch: WAR_latch port map( rti_latch_input, clk, reset, RTI, RTI_out );
-    RTI_Buff <= not RTI_out;
-    RTI_module_out <= RTI;
+    --rti_latch_input <= (RTI_Ex_MEM xor RTI);
+    --rti_latch: WAR_latch port map( rti_latch_input, clk, reset, RTI, RTI_out );
+    --RTI_Buff <= not RTI_out;
+    --RTI_module_out <= RTI;
+    RTI_Buff <= RTI;
 
-    call_latch_input <= (CALL_Ex_Mem xor CALL);
-    call_latch: WAR_latch port map( call_latch_input, clk, reset, CALL, CALL_out );
-    CALL_Buff <= not CALL_out;
-    CALL_module_out <= CALL;
+    --call_latch_input <= (CALL_Ex_Mem xor CALL);
+    --call_latch: WAR_latch port map( call_latch_input, clk, reset, CALL, CALL_out );
+    --CALL_Buff <= not CALL_out;
+    --CALL_module_out <= CALL;
+    CALL_Buff <= CALL;
 
     INT_module_out<= INT;
     reset_module_out <= reset;
