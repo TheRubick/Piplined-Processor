@@ -12,7 +12,6 @@ gellesh_instructions.txt
 instructionMemory.mem
 dataMemory.mem
 Assembler/__pycache__/
-Assembler/
-instructionMemory.mem
+Assembler/instructionMemory.mem
 Assembler/dataMemory.mem
 Execution Stage\Test.vhd

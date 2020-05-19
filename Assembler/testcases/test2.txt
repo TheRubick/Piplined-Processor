@@ -1,0 +1,16 @@
+# testcase2
+
+.ORG 0
+10
+.ORG 2
+100
+.ORG 10
+inc R6
+LDD r7,0
+ADD R6,r7,R5
+swap r5,r6
+inc R0
+.DATA
+4
+5
+# r7->4 r5->1 r6->5 r0->1

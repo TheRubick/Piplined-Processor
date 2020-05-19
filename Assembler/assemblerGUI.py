@@ -14,7 +14,7 @@ def printText():
 def openDialogBox():
     from tkinter import filedialog
    
-    root.fileName = filedialog.askopenfilename(filetypes=(("File instruction", ".txt"), ("All files","*.*")))
+    root.fileName = filedialog.askopenfilename(filetypes=(("File instruction", ".asm"), ("All files","*.*")))
 
     print(root.fileName)
     root.title("Instruction file = "+root.fileName)
