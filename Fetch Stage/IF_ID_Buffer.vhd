@@ -8,7 +8,9 @@ entity IF_IR_Buffer is
     PPC: in std_logic_vector (31 downto 0);
     two_ints, CALL, RET, RTI, INT: out std_logic;
     PC_IF_ID: out std_logic_vector (31 downto 0);
-    IR: out std_logic_vector (15 downto 0)
+    IR: out std_logic_vector (15 downto 0);
+    dp_in: in std_logic;
+    dp_out: out std_logic 
   ) ;
 end IF_IR_Buffer;
 
@@ -54,4 +56,6 @@ begin
     IR_Reg: generic_WAR_reg GENERIC MAP(REG_WIDTH => 16) port map(IR_Buff, clk, reset, '1', IR);
     
     PC_Reg: generic_WAR_reg GENERIC MAP(REG_WIDTH => 32) port map(PPC, clk, reset, '1', PC_IF_ID);
+
+    db_latch: WAR_latch port map(dp_in, clk, reset, '1', dp_out);
 end IF_IR_Buffer_arch ; -- arch

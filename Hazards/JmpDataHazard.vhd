@@ -83,7 +83,7 @@ DP <= DP_Final WHEN clear = '0' Else -- here we out Right DP
 RC3_OR_RC2_Mux : mux2_generic generic map (INPUT_WIDTH => 4) port map (DHR3(11 downto 8), DHR2(11 downto 8), DP2, RC_SEL_TEMP);
 RC2_3_OR_RC1_Mux : mux2_generic generic map (INPUT_WIDTH => 4) port map (RC_SEL_TEMP, DHR1(11 downto 8), DP1, RC_Final);
 
-Cycles <= RC_Final(3 downto 2) - RC_Final(1 downto 0)  WHEN clear = '0' Else  -- here we calcualte Cycles R - C
+Cycles <= RC_Final(3 downto 2) - RC_Final(1 downto 0) + "01" WHEN clear = '0' Else  -- here we calcualte Cycles R - C
           "00";
 
 EXE_MEM <=  RC_Final(3)  WHEN clear = '0' Else  -- out bit number 11 R from neart reg dep when 0 -> data ready at exectue / 1-> data ready at mem

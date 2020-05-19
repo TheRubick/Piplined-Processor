@@ -30,17 +30,19 @@ architecture main_arch of main is
     ) ;
   end component;
 
-      component IF_IR_Buffer is
-        port (
-          clk,RTI_Buff, RET_Buff, CALL_Buff, RET_in, RTI_in, CALL_in, INT_in, reset, two_inst_in: in std_logic;
-          IR_Buff: in std_logic_vector (15 downto 0);
-          PPC: in std_logic_vector (31 downto 0);
-          two_ints, CALL, RET, RTI, INT: out std_logic;
-          PC_IF_ID: out std_logic_vector (31 downto 0);
-          IR: out std_logic_vector (15 downto 0)
-        ) ;
-      end component;
-
+  component IF_IR_Buffer is
+    port (
+      clk,RTI_Buff, RET_Buff, CALL_Buff, RET_in, RTI_in, CALL_in, INT_in, reset, two_inst_in: in std_logic;
+      IR_Buff: in std_logic_vector (15 downto 0);
+      PPC: in std_logic_vector (31 downto 0);
+      two_ints, CALL, RET, RTI, INT: out std_logic;
+      PC_IF_ID: out std_logic_vector (31 downto 0);
+      IR: out std_logic_vector (15 downto 0);
+      dp_in: in std_logic;
+      dp_out: out std_logic 
+    ) ;
+  end component;
+  
 
 
       component decode_stage is
@@ -281,6 +283,7 @@ architecture main_arch of main is
     signal two_ints, CALL, RET, RTI, INT: std_logic;
     signal PC_IF_ID: std_logic_vector (31 downto 0);
     signal IR_IF_ID: std_logic_vector (15 downto 0);
+    signal dp_out_IF_ID: std_logic;
 
 
     -- missing input signals to decode
@@ -396,13 +399,13 @@ begin
         RET_module_out_fromFetch,RTI_module_out_fromFetch, CALL_module_out_fromFetch, INT_module_out_fromFetch,
         reset_module_out_fromFetch,two_instruction_input_Dout
         ,IR_Buff_fromFetch,PPC_fromFetch,
-        two_ints, CALL, RET, RTI, INT,PC_IF_ID,IR_IF_ID);
+        two_ints, CALL, RET, RTI, INT,PC_IF_ID,IR_IF_ID,dp_out_fetch,dp_out_IF_ID);
 
     --DECODE
 
     Decode: decode_stage port map(clk,reset_module_out_fromFetch,Flush_out,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
         jump_reg_add_fromFetch,dst1_add_wb_out,dst2_add_wb_out,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,
-        ADD_DST1_EX, DATA_DST2_EX, exe_mem_out_fetch, one_two_out_fetch, dp_out_fetch,call_Dout,RET_Dout,PC_IF_EX_Dout,
+        ADD_DST1_EX, DATA_DST2_EX, exe_mem_out_fetch, one_two_out_fetch, dp_out_IF_ID,call_Dout,RET_Dout,PC_IF_EX_Dout,
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
         in_signal_Dout, jz_Dout,jmp_Dout,two_instruction_input_Dout,STALL_Dout,IR_out_Dout,EA_Dout,IMM_Dout,decreament_sp_Dout, increament_sp_Dout,
         TEMP_OUT_Dout,jump_reg_data_Dout,out1_data_Dout,
