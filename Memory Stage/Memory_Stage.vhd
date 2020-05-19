@@ -110,7 +110,7 @@ signal Flag_CT,current_address,current_address_final,
 SIGNAL current_address_value  : integer := 0;
 SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
 SIGNAL spOutputData,updateSpInput,updateSpPlusTwo,updateSpMinusTwo,dp1MuxStackPointerOutput : std_logic_vector(31 downto 0);
-SIGNAL spInputDataAux,spOutputDataAux,updateSpInputAux : std_logic_vector(31 downto 0);
+SIGNAL spInputDataAux,spOutputDataAux,updateSpInputAux,data_dst_dp : std_logic_vector(31 downto 0);
 signal currentDataSel,updateSpSel : std_logic_vector(1 downto 0);
 signal data_mem_flag : std_logic_vector(3 downto 0);
 BEGIN
@@ -132,7 +132,8 @@ BEGIN
 		
 	--Current data part
 		currentDataSel <= (call_ex or int_ex) & SF; --selector of this part
-		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst2_ex,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
+		dp1MuxdstMem1dstMem2 : mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dst2_mem,dst1_mem,dp1,data_dst_dp);
+		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
 		
 	
 	
