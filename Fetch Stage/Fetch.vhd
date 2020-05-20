@@ -145,11 +145,13 @@ architecture Fetch_arch of Fetch is
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
     signal int_make_jmp_ready: std_logic;
     signal New_PC_before: std_logic_vector (31 downto 0);
+    signal bad_flush;
 begin
 
   --
 
   --to test new branch
+  bad_flush <= '0';
   -- interrupt 
   interrupt_module: Interrupt port map(clk,interrupt_sg,reset_sg,JMP,RET,RTI,JMPZ,IR,RTI_Ex_MEM,RET_Ex_MEM,
                       Jmp_Ready,Prediction_Done,
@@ -167,7 +169,7 @@ begin
     --ISR_PC <= (others =>'0');
     --one_stall_int <= '0';
     --is Jump
-    isJumpEnable <= (not (stall or INT2 or INT3 or flush or one_stall_int));
+    isJumpEnable <= (not (stall or INT2 or INT3 or bad_flush or one_stall_int));
     isJump: is_jmp port map(isJumpEnable,IR,RTI,RET,CALL,JMP,JMPZ,src_reg);
     --JMP <= '0';
     --JMPZ <= '0';
@@ -175,7 +177,7 @@ begin
     --RET <= '0';
     --RTI <= '0';
     --jump data hazard
-    JmpDataHazard_en <= (not (stall or flush)) and (RTI or RET or CALL or JMP or JMPZ);
+    JmpDataHazard_en <= (not (stall or bad_flush)) and (RTI or RET or CALL or JMP or JMPZ);
     jmpDataHazard_circuit: JmpDataHazard port map(DHR1, DHR2, DHR3, JmpDataHazard_en, reset,src_reg,
     dp,one_over_2,exe_mem,cycles);
     one_two_out <= one_over_2;
@@ -223,7 +225,7 @@ begin
 
 
     --IR_MUX_Selector <= (flush or JMP or one_stall_int or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
-    IR_MUX_Selector <= (flush or JMP  or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
+    IR_MUX_Selector <= (bad_flush or JMP  or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
 
     IRmux: mux2_generic GENERIC MAP (INPUT_WIDTH => 16) port map (IR, NOP,IR_MUX_Selector,IR_Buff_Buffer);
     IR_Buff <= IR_Buff_Buffer;
@@ -267,7 +269,7 @@ begin
     
     PPCmux1: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (PC_plus_one,Other_PC,JMPZ,PPC_mux1_out);
 
-    PPCmux2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (PC_plus_one,PC_ID_EX,flush,PPC_mux2_out);
+    PPCmux2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (PC_plus_one,PC_ID_EX,bad_flush,PPC_mux2_out);
     
     PPC_Mux3_selector <= (INT xor INTZF);
     PPCmux3: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (PPC_mux1_out,New_PC,PPC_Mux3_selector,PPC_mux3_out);
