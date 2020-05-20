@@ -187,7 +187,7 @@ begin
     c2 <= cycles(1);
     -- 
     --jmp ready
-    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET;
+    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET or RTI;
 
     --latches
     --ret_Latch_input <= (RET_Ex_MEM xor RET);
@@ -207,8 +207,10 @@ begin
     --CALL_Buff <= not CALL_out;
     --CALL_module_out <= CALL;
     CALL_Buff <= CALL;
+    ----------changed interrrupt
+    --INT_module_out<= INT;
+    INT_module_out<= INT2;
 
-    INT_module_out<= INT;
     reset_module_out <= reset;
     --memory part
     mem0 <= "00000000000000000000000000000000";

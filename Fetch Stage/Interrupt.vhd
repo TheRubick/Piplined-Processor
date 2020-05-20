@@ -98,13 +98,14 @@ architecture Interrupt_arch of Interrupt is
     signal encoder_Input: std_logic_vector (3 downto 0);
     signal mux41_selectors: std_logic_vector (1 downto 0);
     signal Reg1_out, Reg2_out: std_logic_vector (15 downto 0);
+    signal int_out_buffer: std_logic;
 begin
 
     int_sg_AndToMux <= (interrupt_sg and (not reset_sg));
     int_Mux: mux2_1bit port map(int_sg_AndToMux,'0',INT_Buffer,muxTointLatch);
     int_latch_enable <= (INT_Buffer or interrupt_sg);
-    int_latch: WAR_latch port map(muxTointLatch,clk,reset_Buffer,int_latch_enable, int_out);
-    
+    int_latch: WAR_latch port map(muxTointLatch,clk,reset_Buffer,int_latch_enable, int_out_buffer);
+    int_out <= int_out_buffer or interrupt_sg;
     or1 <= (JMP or RET or RTI);
 
     And1 <= (int_out and (not JMPZ) and (not Jmpz2_Buffer) and (not or1) );
