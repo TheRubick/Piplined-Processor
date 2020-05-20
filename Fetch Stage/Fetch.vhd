@@ -209,7 +209,7 @@ begin
     CALL_Buff <= CALL;
     ----------changed interrrupt
     --INT_module_out<= INT;
-    INT_module_out<= INT2;
+    INT_module_out<= INT;
 
     reset_module_out <= reset;
     --memory part

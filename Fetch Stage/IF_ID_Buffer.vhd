@@ -54,9 +54,9 @@ architecture IF_IR_Buffer_arch of IF_IR_Buffer is
 begin
 
     
-    clear_int_latch<= (reset or INT_Buffer);
-    INT_Latch: WAR_latch port map(INT_in, clk, clear_int_latch, INT_in, INT_Buffer);
-    INT <= INT_Buffer;
+    --clear_int_latch<= (reset or INT_Buffer);
+    INT_Latch: Special_latch port map(INT_in, clk, reset, '1', INT);
+    --INT <= INT_Buffer;
     
     RET_Latch: Special_latch port map(RET_Buff, clk, reset,'1', RET);
     RTI_Latch: Special_latch port map(RTI_Buff, clk, reset, '1', RTI);
