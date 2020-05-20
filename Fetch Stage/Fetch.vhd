@@ -145,7 +145,7 @@ architecture Fetch_arch of Fetch is
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
     signal int_make_jmp_ready: std_logic;
     signal New_PC_before: std_logic_vector (31 downto 0);
-    signal bad_flush;
+    signal bad_flush: std_logic;
 begin
 
   --
