@@ -104,8 +104,8 @@ begin
     int_sg_AndToMux <= (interrupt_sg and (not reset_sg));
     int_Mux: mux2_1bit port map(int_sg_AndToMux,'0',INT_Buffer,muxTointLatch);
     int_latch_enable <= (INT_Buffer or interrupt_sg);
-    int_latch: WAR_latch port map(muxTointLatch,clk,reset_Buffer,int_latch_enable, int_out_buffer);
-    int_out <= int_out_buffer or interrupt_sg;
+    int_latch: WAR_latch port map(muxTointLatch,clk,reset_Buffer,int_latch_enable, int_out);
+    --int_out <= int_out_buffer or interrupt_sg;
     or1 <= (JMP or RET or RTI);
 
     And1 <= (int_out and (not JMPZ) and (not Jmpz2_Buffer) and (not or1) );
