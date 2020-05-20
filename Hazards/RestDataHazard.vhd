@@ -113,7 +113,7 @@ S2_1_2 <= src2_1_2 AND Not(clear2);
 -- end process EX_VAR;
 
 
-LOADCASE <= ( (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1))) AND stall_enable;
+LOADCASE <= (( (DP2_S2 AND DHR2(11) AND Not(clear2)) OR (DP2_S1 AND DHR2(11) AND Not(clear1))) AND stall_enable) and '0';
 
 
 end a_RestDataHazard;
