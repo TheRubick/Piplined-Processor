@@ -90,7 +90,7 @@ architecture Interrupt_arch of Interrupt is
               ) ;
           end component;
             
-    signal int_sg_AndToMux, muxTointLatch, intLatchTOAnd1, And1, int_latch_enable, int_out,or1: std_logic;
+    signal int_sg_AndToMux, muxTointLatch, And1, int_latch_enable, int_out,or1: std_logic;
     signal Mux41Out, And2, Reg1_enable, Reg2_enable, Jmpz2_latch_enable, INT_Buffer: std_logic;
     signal INT2_Buffer, INT3_Buffer, reset1_Buffer, Jmpz2_Buffer, reset_Buffer: std_logic;
     signal reset1_latch_input,reset1_latch_en: std_logic;
@@ -98,7 +98,7 @@ architecture Interrupt_arch of Interrupt is
     signal encoder_Input: std_logic_vector (3 downto 0);
     signal mux41_selectors: std_logic_vector (1 downto 0);
     signal Reg1_out, Reg2_out: std_logic_vector (15 downto 0);
-    signal int_out_buffer: std_logic;
+    signal int_out_buffer, jmpz2_rst: std_logic;
 begin
 
     int_sg_AndToMux <= (interrupt_sg and (not reset_sg));
@@ -149,7 +149,8 @@ begin
     -- temp at first reset1 is U and that makes problems in fetch
     reset1 <= '0' when reset_sg = '1' else reset1_Buffer;
     Jmpz2_latch_enable <= JMPZ and JMP_Ready;
-    jmpz2_latch: WAR_latch port map(JMPZ,clk,Prediction_Done,Jmpz2_latch_enable, Jmpz2_Buffer);
+    jmpz2_rst <= Prediction_Done or reset_sg;
+    jmpz2_latch: WAR_latch port map(JMPZ,clk,jmpz2_rst,Jmpz2_latch_enable, Jmpz2_Buffer);
     
     Jmpz2<=Jmpz2_Buffer;
 
