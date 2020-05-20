@@ -222,7 +222,8 @@ begin
     memory: instructionMemory port map(clk,'0',muxTOMem,"0000000000000000",IR);
 
 
-    IR_MUX_Selector <= (flush or JMP or one_stall_int or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
+    --IR_MUX_Selector <= (flush or JMP or one_stall_int or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
+    IR_MUX_Selector <= (flush or JMP  or (JMPZ and dp) or INT2 or INT3 or stall or reset or RTI or RET);
 
     IRmux: mux2_generic GENERIC MAP (INPUT_WIDTH => 16) port map (IR, NOP,IR_MUX_Selector,IR_Buff_Buffer);
     IR_Buff <= IR_Buff_Buffer;
