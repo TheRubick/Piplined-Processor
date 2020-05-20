@@ -163,7 +163,7 @@ INT_Sel_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (PC_ID, JMP_
 -- BranchPredicator
 Flush_out <= Flush;
 Predication_Done <= PR_Done;
-BranchPredicator_Map : BranchPredicator port map (RST, CLK, flagin(3), JMPZ, Predication, PR_Done, Flush);
+BranchPredicator_Map : BranchPredicator port map (RST, CLK, flagout(3), JMPZ, Predication, PR_Done, Flush);
 
 
 end a_EX_STAGE;
