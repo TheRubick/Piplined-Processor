@@ -108,7 +108,7 @@ signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
 signal Flag_CT,current_address,current_address_final,
 	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
 	dst2_mem_wire,
-	pc_ex_mem_latch : std_logic_vector(31 downto 0);
+	pc_ex_mem_latch,pc_ex_mem_wire : std_logic_vector(31 downto 0);
 
 SIGNAL current_address_value  : integer := 0;
 SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
@@ -140,7 +140,8 @@ BEGIN
 	--Current data part
 		currentDataSel <= (call_ex or int_latch_out) & SF; --selector of this part
 		dp1MuxdstMem1dstMem2 : mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dst2_mem_wire,dp1MuxOutput,dp1,data_dst_dp);
-		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem_latch,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
+		pc_ex_mem_wire <= pc_ex_mem_latch when int_latch_out = '1' else pc_ex_mem;
+		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem_wire,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
 		
 	
 	
