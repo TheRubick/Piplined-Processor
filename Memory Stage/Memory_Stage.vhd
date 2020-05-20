@@ -102,11 +102,13 @@ END component;
 
 
 signal RF,SF,FlagRegEnable,WR_sig,RD_sig,
-		incSpWire,decSpWire : std_logic;
+		incSpWire,decSpWire,
+		int_latch_out : std_logic;
 signal FlagRegInput,Flag4BitsOutput : std_logic_vector(3 downto 0);
 signal Flag_CT,current_address,current_address_final,
 	current_data,datamem1,dataMem2,dp1MuxOutput,dataInputCurrentData,
-	dst2_mem_wire : std_logic_vector(31 downto 0);
+	dst2_mem_wire,
+	pc_ex_mem_latch : std_logic_vector(31 downto 0);
 
 SIGNAL current_address_value  : integer := 0;
 SIGNAL spInputData  : std_logic_vector (31 downto 0) := ("00000000000000000000001111111111");
@@ -119,7 +121,11 @@ BEGIN
 	--RF signal
 		RFlatch : WAR_latch port map(rti_ex,clk,reset,'1',RF); 
 	--SF signal
-		SFlatch : WAR_latch port map(int_ex,clk,reset,'1',SF);
+		SF <= int_ex;	
+	--int latch
+		Intlatch : WAR_latch port map(int_ex,clk,reset,'1',int_latch_out);
+	--pc temp latch
+		pcTempLatch: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(pc_ex_mem,clk,reset,'1',pc_ex_mem_latch);
 
 	--Flag Register Part
 		-- 4 Bit Flag Register
@@ -132,9 +138,9 @@ BEGIN
 		Flag_CT <= "0000000000000000000000000000" & Flag4BitsOutput;
 		
 	--Current data part
-		currentDataSel <= (call_ex or int_ex) & SF; --selector of this part
+		currentDataSel <= (call_ex or int_latch_out) & SF; --selector of this part
 		dp1MuxdstMem1dstMem2 : mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map(dst2_mem_wire,dp1MuxOutput,dp1,data_dst_dp);
-		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
+		CurrentDataBlock : mux4_generic GENERIC MAP (INPUT_WIDTH => 32) port map(data_dst_dp,Flag_CT,pc_ex_mem_latch,"UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU",currentDataSel,current_data);
 		
 	
 	
@@ -144,7 +150,7 @@ BEGIN
 		
 		--Read and Write signals
 		RD_sig <= RF or mem_rd_ex or ret_ex or rti_ex;
-		WR_sig <= SF or mem_wr_ex or int_ex;
+		WR_sig <= SF or mem_wr_ex or int_latch_out;
 		
 		current_address_value <= to_integer(unsigned(current_address));
 		current_address_final <= current_address when current_address_value < 1024 and current_address_value >= 0 else "00000000000000000000000000000000"; --sfdfsfsdfadsfjsdlfjasjfjsafjlsdjfldsjfjsddfj
@@ -165,7 +171,7 @@ BEGIN
 		--incSpWire
 		incSpWire <= inc_ex or RF or rti_ex or ret_ex;
 		--decSpWire
-		decSpWire <= dec_ex or int_ex or call_ex or SF;
+		decSpWire <= dec_ex or int_latch_out or call_ex or SF;
 		--updateSp Latch
 		updateSpPlusTwo <= spOutputData + 1;
 		updateSpMinusTwo <= spOutputData - 1;
