@@ -144,6 +144,7 @@ architecture Fetch_arch of Fetch is
     signal big_mux_1_out,big_mux_2_out ,mem2,mem3,PCMux_out: std_logic_vector (31 downto 0);
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
     signal int_make_jmp_ready: std_logic;
+    signal New_PC_before: std_logic_vector (31 downto 0);
 begin
 
   --
@@ -187,8 +188,8 @@ begin
     c2 <= cycles(1);
     -- 
     --jmp ready
-    int_make_jmp_ready <= INT and (not INT2);
-    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET or RTI or int_make_jmp_ready;
+    
+    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET or RTI;
 
     --latches
     --ret_Latch_input <= (RET_Ex_MEM xor RET);
@@ -235,7 +236,12 @@ begin
     mux2_selector <= (RTI_Ex_MEM or RET_Ex_MEM);
     mux2: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (big_mux_1_out, Mem_data, mux2_selector,mux2_out);
 
-    mux3: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (mux2_out, PC_ID_EX, flush,New_PC);
+    --mux3: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (mux2_out, PC_ID_EX, flush,New_PC);
+    mux3: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (mux2_out, PC_ID_EX, flush,New_PC_before);
+    -- additinal mux to cut New_PC/////////////////////////////
+    int_make_jmp_ready <= INT and (not INT2);
+    mux3_additinal: mux2_generic GENERIC MAP (INPUT_WIDTH => 32) port map (New_PC_before, PC, int_make_jmp_ready,New_PC);
+    --//////////////////////////////////////////////////////////
 
     JmpIntPcReg: generic_WAR_reg GENERIC MAP (REG_WIDTH => 32) port map(New_PC,clk,reset,INTZF,Jmp_Int_PC);
 
