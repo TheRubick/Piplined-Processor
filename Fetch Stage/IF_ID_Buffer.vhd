@@ -50,13 +50,14 @@ architecture IF_IR_Buffer_arch of IF_IR_Buffer is
       end component;
 
     signal clear_int_latch,INT_Buffer: std_logic;
+    signal IR_out: std_logic_vector (15 downto 0);
 
 begin
 
     
     --clear_int_latch<= (reset or INT_Buffer);
-    INT_Latch: Special_latch port map(INT_in, clk, reset, '1', INT);
-    --INT <= INT_Buffer;
+    INT_Latch: Special_latch port map(INT_in, clk, reset, '1', INT_Buffer);
+    INT <= INT_Buffer;
     
     RET_Latch: Special_latch port map(RET_Buff, clk, reset,'1', RET);
     RTI_Latch: Special_latch port map(RTI_Buff, clk, reset, '1', RTI);
@@ -64,8 +65,8 @@ begin
 
     two_inst_Latch: WAR_latch port map(two_inst_in, clk, reset, '1', two_ints);
 
-    IR_Reg: generic_WAR_reg GENERIC MAP(REG_WIDTH => 16) port map(IR_Buff, clk, reset, '1', IR);
-    
+    IR_Reg: generic_WAR_reg GENERIC MAP(REG_WIDTH => 16) port map(IR_Buff, clk, reset, '1', IR_out);
+    IR <= IR_out when INT_Buffer='0' else "0000000000000000";
     PC_Reg: generic_WAR_reg GENERIC MAP(REG_WIDTH => 32) port map(PPC, clk, reset, '1', PC_IF_ID);
 
     db_latch: WAR_latch port map(dp_in, clk, reset, '1', dp_out);
