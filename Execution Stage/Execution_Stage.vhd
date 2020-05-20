@@ -157,7 +157,7 @@ DP1_EX_Mux : mux2_1bit port map ('0', DP1, DP_Sel, DP1_EX);
 DP2_EX_Mux : mux2_1bit port map ('0', DP2, DP_Sel, DP2_EX);
 
 --INT Mux
-INT_Sel <= INT AND JMPZ AND PR_Done AND (NOT(Flush));
+INT_Sel <= INT AND JMPZ AND PR_Done AND (NOT('0'));
 INT_Sel_Mux : mux2_generic generic map (INPUT_WIDTH => 32) port map (PC_ID, JMP_INT_PC, INT_Sel, PC_EX);
 
 -- BranchPredicator

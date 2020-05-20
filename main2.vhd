@@ -29,7 +29,7 @@ architecture main_arch of main is
       one_two_out, exe_mem_out, dp_out: out std_logic
     ) ;
   end component;
-  
+
   component IF_IR_Buffer is
     port (
       clk,RTI_Buff, RET_Buff, CALL_Buff, INT_in, reset, two_inst_in: in std_logic;
@@ -39,10 +39,10 @@ architecture main_arch of main is
       PC_IF_ID: out std_logic_vector (31 downto 0);
       IR: out std_logic_vector (15 downto 0);
       dp_in: in std_logic;
-      dp_out: out std_logic 
+      dp_out: out std_logic
     ) ;
   end component;
-  
+
 
 
       component decode_stage is
@@ -356,7 +356,7 @@ architecture main_arch of main is
     signal C2_out_ID_EX, DP1_out_ID_EX, DP2_out_ID_EX, LOADCASE_out_ID_EX ,S1_1_2_out_ID_EX, S2_1_2_out_ID_EX: std_logic;
 
     -- signals outed from Execute stage to Execute - Memory buffer
-    signal Predication, Predication_Done, Flush_out :  std_logic; -- BranchPredicator outputs
+    signal Predication, Predication_Done, Flush_out , Flush_out2 :  std_logic; -- BranchPredicator outputs
     signal DP1_EX, DP2_EX : std_logic;
     signal PC_EX, ADD_DST1_EX, DATA_DST2_EX : std_logic_vector(31 downto 0);
     ------------------------------------------------------------------------
@@ -404,7 +404,7 @@ begin
 
     --DECODE
 
-    Decode: decode_stage port map(clk,reset_module_out_fromFetch,Flush_out,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
+    Decode: decode_stage port map(clk,reset_module_out_fromFetch,Flush_out2,IR_IF_ID,PC_IF_ID,RET,INT,CALL,RTI,two_ints,
         jump_reg_add_fromFetch,dst1_add_wb_out,dst2_add_wb_out,dst1_wb_out,dst2_wb_out,reg1_wb_out,reg2_wb_out,
         ADD_DST1_EX, DATA_DST2_EX, exe_mem_out_fetch, one_two_out_fetch, dp_out_IF_ID,call_Dout,RET_Dout,PC_IF_EX_Dout,
         INT_Dout,RTI_Dout,reg_write1_Dout,reg_write2_Dout,memory_read_Dout,memory_write_Dout,alu_src2_Dout,alu_enable_Dout,out_signal_Dout,
@@ -458,6 +458,7 @@ begin
   OUT2_out_ID_EX, ADD_DST1_OUT, dst1_wb_out, DATA_DST2_OUT, dst2_wb_out, PC_IF_EX_out_ID_EX,
   Jmp_Int_PC_fromFetch, ALU_ENABLE_out_ID_EX, IMM_out_ID_EX, EA_out_ID_EX, Predication,
   Predication_Done,  Flush_out, DP1_EX,  DP2_EX, PC_EX, ADD_DST1_EX,  DATA_DST2_EX,flag_in,flag_out,S1_1_2_out_ID_EX, S2_1_2_out_ID_EX);
+  Flush_out2 <= '0';
 
   -- Execute Memory Buffer
   EX_MEM_Buffer_component : EX_MEM_Buffer port map (clk, reset_module_out_fromFetch, STALL_out_ID_EX,

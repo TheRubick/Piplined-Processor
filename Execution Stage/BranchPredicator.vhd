@@ -25,7 +25,7 @@ end component;
 begin
   compare <= ZeroFlag Xnor result when CLK = '1' else
             compare ;
-  Predication <= result;
+  Predication <= '1';
   Flush <= '1' when rst = '0' and JMPZ = '1' and compare = '0' else
            '0';
   Predication_Done <= '1' when rst = '0' and JMPZ = '1' else
