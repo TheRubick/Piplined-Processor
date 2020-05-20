@@ -143,7 +143,7 @@ architecture Fetch_arch of Fetch is
     signal mem0, mem1,PC,muxTOMem,PC_plus_one,mux1_out,mux2_out,New_PC,PC_Input: std_logic_vector (31 downto 0);
     signal big_mux_1_out,big_mux_2_out ,mem2,mem3,PCMux_out: std_logic_vector (31 downto 0);
     signal PPC_mux1_out,PPC_mux2_out,PPC_mux3_out,Other_PC,PPC_Buffer: std_logic_vector (31 downto 0);
-
+    signal int_make_jmp_ready: std_logic;
 begin
 
   --
@@ -187,7 +187,8 @@ begin
     c2 <= cycles(1);
     -- 
     --jmp ready
-    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET or RTI;
+    int_make_jmp_ready <= INT and (not INT2);
+    Jmp_Ready <= ((( (c1 or c2) and dp ) or stall )) or RET or RTI or int_make_jmp_ready;
 
     --latches
     --ret_Latch_input <= (RET_Ex_MEM xor RET);
