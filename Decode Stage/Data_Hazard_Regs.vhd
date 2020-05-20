@@ -81,7 +81,7 @@ begin
     -- 1st register
     reg1_en <= not stall;
     reg1_in <= ( mux_out & zero_zero & I & IR_20 & reg2_wr & reg1_0);
-    DHR1: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg1_in ,clk,reg1_rst,reg1_en,reg1_out);
+    DHR1: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg1_in ,clk,reg1_rst,'0',reg1_out);
     DHR1_out <= reg1_out;
 
     -- 2nd regsiter
@@ -90,7 +90,7 @@ begin
     --reg2_en <= not stall;
     reg2_en <= '1';
     reg2_in <= ( reg1_out (11 downto 10) & zero_one & reg1_out(7 downto 0));
-    DHR2: generic_DHR_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,reg2_en,reg2_out,stall_enable,stall);
+    DHR2: generic_DHR_reg GENERIC MAP (REG_WIDTH => 12) port map(reg2_in ,clk,reg2_rst,'0',reg2_out,stall_enable,stall);
     DHR2_out <= reg2_out;
 
     --stall_enable <= '1' when reg2_in = reg2_out else '0';
@@ -100,7 +100,7 @@ begin
     --reg3_rst <=  stall or reset;
     reg3_rst <= reset;
     reg3_in <= ( one_zero & one_zero & reg2_out( 7 downto 0));
-    DHR3: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg3_in ,clk,reg3_rst,'1',reg3_out);
+    DHR3: generic_RAW_reg GENERIC MAP (REG_WIDTH => 12) port map(reg3_in ,clk,reg3_rst,'0',reg3_out);
     DHR3_out <= reg3_out;
 
 end DHR_arch ; -- arch
