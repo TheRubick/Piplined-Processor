@@ -16,7 +16,8 @@ ENTITY Memory_stage_entity IS
 		dst1_add_ex_output,dst2_add_ex_output : OUT std_logic_vector(2 downto 0);
 		dst1_mem_output,dst2_mem_output,out_port_output,mem_data_to_fetch : OUT std_logic_vector(31 DOWNTO 0);
 		flag_from_execute : in std_logic_vector(3 downto 0);
-		flag_to_execute : out std_logic_vector(3 downto 0)
+		flag_to_execute : out std_logic_vector(3 downto 0);
+		jz_flag_input : in std_logic
 		);
 END ENTITY Memory_stage_entity;
 
@@ -124,7 +125,7 @@ BEGIN
 		-- 4 Bit Flag Register
 		data_mem_flag <= datamem1(3) & datamem1(2) & datamem1(1) & datamem1(0);
 		FlagRegMux: mux2_generic GENERIC MAP (INPUT_WIDTH => 4) port map(flag_from_execute,data_mem_flag,RF,FlagRegInput); -- take careajfdsjfsjfjsdjfsadfjsadjfsadjfljsadfjsjfj
-		FlagRegEnable <= RF or ALU;
+		FlagRegEnable <= RF or ALU or jz_flag_input; -- jz_flag_input is added 
 		Flag4BitsReg : generic_WAR_reg GENERIC MAP (REG_WIDTH => 4) port map(FlagRegInput,clk,reset,FlagRegEnable,Flag4BitsOutput);
 		flag_to_execute <= Flag4BitsOutput;
 		--concatinating the output with 28 bits

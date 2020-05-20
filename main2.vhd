@@ -248,7 +248,8 @@ architecture main_arch of main is
 		dst1_add_ex_output,dst2_add_ex_output : OUT std_logic_vector(2 downto 0);
 		dst1_mem_output,dst2_mem_output,out_port_output,mem_data_to_fetch : OUT std_logic_vector(31 DOWNTO 0);
 		flag_from_execute : in std_logic_vector(3 downto 0);
-		flag_to_execute : out std_logic_vector(3 downto 0)
+    flag_to_execute : out std_logic_vector(3 downto 0);
+    jz_flag_input : in std_logic
 		);
     END Component;
 
@@ -478,7 +479,7 @@ begin
                       CALL_EX_OUT,INC_OUT,DEC_OUT,RET_EX_OUT,RTI_EX_OUT,INT_EX_OUT,ALU_ENABLE_out_ID_EX,DP1_OUT,DP2_OUT,ADD_DST1_OUT,DATA_DST2_OUT,dst1_wb_out,dst2_wb_out,
                       PC_OUT,in_port,
                       reg1_mem_out,reg2_mem_out,dst1_add_mem_out,dst2_add_mem_out, -- output signals
-                      dst1_mem_out,dst2_mem_out,out_port,mem_data_to_fetch,flag_out,flag_in);
+                      dst1_mem_out,dst2_mem_out,out_port,mem_data_to_fetch,flag_out,flag_in,JZ_out_ID_EX);
 
   --WriteBack Stage
   WriteBack_stage_component : Mem_WB_entity port map(reg1_mem_out,reg2_mem_out,clk,reset_module_out_fromFetch,dst1_add_mem_out,dst2_add_mem_out,
