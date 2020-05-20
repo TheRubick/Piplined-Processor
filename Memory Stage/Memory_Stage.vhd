@@ -163,9 +163,9 @@ BEGIN
 		spLatch: stack_reg GENERIC MAP (REG_WIDTH => 32) port map(updateSpInput,clk,reset,'1',spOutputData);
 		
 		--incSpWire
-		incSpWire <= inc_ex or RF or SF or rti_ex or ret_ex;
+		incSpWire <= inc_ex or RF or rti_ex or ret_ex;
 		--decSpWire
-		decSpWire <= dec_ex or int_ex or call_ex;
+		decSpWire <= dec_ex or int_ex or call_ex or SF;
 		--updateSp Latch
 		updateSpPlusTwo <= spOutputData + 1;
 		updateSpMinusTwo <= spOutputData - 1;
