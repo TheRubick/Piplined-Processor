@@ -50,6 +50,6 @@ begin
   --     end process;
 
 
-FSM_Predicator : FSM port map (ZeroFlag, CLK, RST, JMPZ, result);
+FSM_Predicator : FSM port map (ZeroFlag, CLK, RST, '0', result);
 
 end a_BranchPredicator;
