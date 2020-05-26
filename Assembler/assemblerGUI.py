@@ -33,7 +33,7 @@ b2 = Button(topFrame,text="generate memory file",command=printText,font="Arial")
 b2.pack(side=RIGHT)
 sb = Scrollbar(root)
 sb.pack(side=RIGHT,fill=Y)
-textBody = Text(root,font="Code",yscrollcommand=sb.set)
+textBody = Text(root,font="consolas",yscrollcommand=sb.set)
 textBody.pack(fill=BOTH)
 
 consoleWindow = Label(root,text="machine instructions would be generated in instructionMemory.mem and dataMemory.mem in the same directory/folder",fg="black",font="Arial")

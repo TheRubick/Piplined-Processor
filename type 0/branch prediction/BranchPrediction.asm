@@ -19,16 +19,22 @@ JMP R3  #load use case #Jump to 20
 
 .ORG 20
 SUB R0,R2,R5 #check if R0 = R2
+nop
+nop
 JZ R1 #jump if R0=R2 to 50
 ADD R4,R4,R4 #R4 = R4*2
 nop
 nop
 OUT R4 #data hazard : RAW
 INC R0
+nop
 JMP R3 #jump to 20
 
 
 .ORG 50
+nop
+nop
+nop
 LDM R0,0 #R0=0
 LDM R2,8 #R2=8
 LDM R3,60 #R3=60
@@ -37,6 +43,8 @@ nop
 JMP R3 #load use case #jump to 60
 
 .ORG 60
+nop
+nop
 ADD R4,R4,R4 #R4 = R4*2
 nop
 nop
